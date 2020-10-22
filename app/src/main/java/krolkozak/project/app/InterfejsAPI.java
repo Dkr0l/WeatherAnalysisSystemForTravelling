@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class InterfejsAPI {
-
     // -------------- WYKONANIE ZAPYTANIA API --------------
     // metoda wykonująca zapytanie API i zwracająca jego wynik
     public static StringBuffer pobierzOdpowiedzAPI(String url) throws IOException {
