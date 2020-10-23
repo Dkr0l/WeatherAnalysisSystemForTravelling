@@ -46,6 +46,8 @@ public class Trasa {
     // koordynaty geograficzne
     public double szerGeog1, dlugGeog1;
     public double szerGeog2, dlugGeog2;
+    //środek transportu
+    public String srodek_transportu;
     // lista punktów geograficznych
     private ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
@@ -115,11 +117,26 @@ public class Trasa {
             // sformatowanie koordynatów, aby pasowały do adresu zapytania API
             String koordynaty1 = szerGeog1 + "," + dlugGeog1;
             String koordynaty2 = szerGeog2 + "," + dlugGeog2;
+            String transport_doURL=new String();
+            switch (srodek_transportu){
+                case "\uD83D\uDE97 samochód: najszybsza trasa":
+                    transport_doURL="fastest";
+                    break;
+                case "\uD83D\uDE97 samochód: najkrótsza trasa":
+                    transport_doURL="shortest";
+                    break;
+                case "\uD83D\uDEB2 rower":
+                    transport_doURL="bicycle";
+                    break;
+                case "\uD83D\uDEB6 pieszo":
+                    transport_doURL="pedestrian";
+                    break;
+            }
 
             // -------------- ZAPYTANIE O TRASĘ (mapquestapi.com) --------------
             // złączenie adresu url w jedną zmienną, która zawiera podstawową domenę zapytań API,
             // klucz, jednostki w kilometrach oraz koordynaty początkowe i końcowe trasy
-            String url = "http://www.mapquestapi.com/directions/v2/route?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&unit=k&from=" + koordynaty1 + "&to=" + koordynaty2;
+            String url = "http://www.mapquestapi.com/directions/v2/route?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&unit=k&from=" + koordynaty1 + "&to=" + koordynaty2+"&routeType="+transport_doURL;
             Log.i(nazwaApki, "mapa url: " + url);
             // zapisanie wyniku zapytania do ciągu buforu
             StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url);
@@ -189,6 +206,7 @@ public class Trasa {
         // utworzenie zarzadcy trasy z podanym kluczem API
         RoadManager zarzadcaTrasy = new MapQuestRoadManager("ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi");
         // utworzenie trasy na podstawie listy punktów
+        if(srodek_transportu=="pedestrian" || srodek_transportu=="bicycle") zarzadcaTrasy.addRequestOption(srodek_transportu);
         Road trasa = zarzadcaTrasy.getRoad(punkty);
         // utworzenie warstwy trasy i dodanie jej do mapy
         Polyline warstwaTrasy = RoadManager.buildRoadOverlay(trasa);
@@ -206,7 +224,7 @@ public class Trasa {
         try {
             // pobranie punktów manewrowych
             JSONArray manewryJSON = trasa.getJSONArray("legs").getJSONObject(0).getJSONArray("maneuvers");
-            JSONObject manewr=new JSONObject();
+            JSONObject manewr;
             JSONObject koordynatyJSON=new JSONObject();
             JSONObject koordynatyPoprzednieJSON=new JSONObject();
             int dodanePunkty=0;

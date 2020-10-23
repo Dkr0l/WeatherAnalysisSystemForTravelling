@@ -139,8 +139,8 @@ public class GlownaAktywnosc extends Activity {
         switch (requestCode) {
             case DANE_TRASY:
                 if (resultCode == Activity.RESULT_OK) {
-                    String test = data.getStringExtra("stworzono trase");
-                    Log.i(nazwaApki, "stworzono trase");
+                    trasa.srodek_transportu = data.getStringExtra("stworzono trase");
+                    Log.i(nazwaApki, "stworzono trase "+trasa.srodek_transportu);
                 }
         }
     }

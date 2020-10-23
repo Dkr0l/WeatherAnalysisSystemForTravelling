@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TravelApp</string>
+    <string-array name="srodek_transportu">
+        <item>🚗 samochód: najszybsza trasa</item>
+        <item>🚗 samochód: najkrótsza trasa</item>
+        <item>🚲 rower</item>
+        <item>🚶 pieszo</item>
+    </string-array>
 </resources>

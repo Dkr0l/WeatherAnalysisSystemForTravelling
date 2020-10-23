@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import androidx.annotation.RequiresApi;
 
@@ -64,10 +66,15 @@ public class TworzenieTrasy extends Activity {
             startActivityForResult(popupIntent, DATA_WYJAZDU);
         });
 
-        zatwierdzTrasePrzycisk.setOnClickListener(v -> {
+        // ustawienie pozycji na liście wyboru środka transportu
+        Spinner lista_transport = (Spinner) findViewById(R.id.wybor_srodka_transportu);
+        ArrayAdapter<CharSequence> adapter_transport = ArrayAdapter.createFromResource(this, R.array.srodek_transportu, android.R.layout.simple_spinner_item);
+        adapter_transport.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        lista_transport.setAdapter(adapter_transport);
 
+        zatwierdzTrasePrzycisk.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.putExtra("stworzono trase", "stworzono trase");
+            intent.putExtra("stworzono trase", (String)lista_transport.getSelectedItem());
             setResult(Activity.RESULT_OK, intent);
             finish();
         });
