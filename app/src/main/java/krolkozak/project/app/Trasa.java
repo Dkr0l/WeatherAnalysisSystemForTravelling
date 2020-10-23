@@ -47,7 +47,7 @@ public class Trasa {
     public double szerGeog1, dlugGeog1;
     public double szerGeog2, dlugGeog2;
     // lista punktów geograficznych
-    private ArrayList<GeoPoint> punkty = new ArrayList<GeoPoint>();
+    private ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
     public OffsetDateTime czasWyjazdu=OffsetDateTime.now();
@@ -219,12 +219,12 @@ public class Trasa {
 
                 // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie
                 if (sumaCzasu > odstep) {
-                    sekundy += sumaCzasu;
                     if(dodanePunkty>0) koordynatyPoprzednieJSON=koordynatyJSON;
                     koordynatyJSON = manewr.getJSONObject("startPoint");
-                    if(sumaCzasu>=2*odstep && dodanePunkty>0){
+                    if(sumaCzasu>=1.5*odstep && dodanePunkty>0){
                         dodajPunktyWLiniProstej(koordynatyPoprzednieJSON.getDouble("lat"), koordynatyJSON.getDouble("lat"), koordynatyPoprzednieJSON.getDouble("lng"), koordynatyJSON.getDouble("lng"), odstep, sumaCzasu, sekundy, kontekst);
                     }
+                    sekundy += sumaCzasu;
                     sumaCzasu = 0;
                     dodanePunkty++;
                     dodajPunktPogodowy(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng"), czasWyjazdu.plusSeconds(sekundy), kontekst);
@@ -239,7 +239,7 @@ public class Trasa {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void dodajPunktyWLiniProstej(double szerokosc1, double szerokosc2, double dlugosc1, double dlugosc2, int odstep, int sumaCzasu, long sekundy, Context kontekst) throws IOException {
-        int doUzupelnienia= (int) Math.floor(sumaCzasu/odstep)/2;
+        int doUzupelnienia= (int) Math.floor(sumaCzasu/odstep);
         double wektorLat=(szerokosc2-szerokosc1)/(doUzupelnienia+1);
         double wektorLng=(dlugosc2-dlugosc1)/(doUzupelnienia+1);
         double latPosrednie=szerokosc1;
@@ -247,7 +247,7 @@ public class Trasa {
         for(int k=1; k<=doUzupelnienia; k++){
             latPosrednie+=wektorLat;
             lngPosrednie+=wektorLng;
-            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+k*odstep), kontekst);
+            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+(int)(k*odstep*0.9)), kontekst);
         }
     }
 
