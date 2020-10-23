@@ -24,18 +24,11 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Trasa {
@@ -48,13 +41,14 @@ public class Trasa {
     public double szerGeog2, dlugGeog2;
     //środek transportu
     public String srodek_transportu;
+    private String transport_doURL=new String();
     // lista punktów geograficznych
     private ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
     public OffsetDateTime czasWyjazdu=OffsetDateTime.now();
     //warunki pogodowe na trasie
-    Pogoda pogoda=new Pogoda();
+    private Pogoda pogoda=new Pogoda();
 
     // metoda czyszcząca mapę (punkty i trasa)
     public void wyczyscMape() {
@@ -117,7 +111,6 @@ public class Trasa {
             // sformatowanie koordynatów, aby pasowały do adresu zapytania API
             String koordynaty1 = szerGeog1 + "," + dlugGeog1;
             String koordynaty2 = szerGeog2 + "," + dlugGeog2;
-            String transport_doURL=new String();
             switch (srodek_transportu){
                 case "\uD83D\uDE97 samochód: najszybsza trasa":
                     transport_doURL="fastest";
@@ -206,8 +199,16 @@ public class Trasa {
         // utworzenie zarzadcy trasy z podanym kluczem API
         RoadManager zarzadcaTrasy = new MapQuestRoadManager("ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi");
         // utworzenie trasy na podstawie listy punktów
-        if(srodek_transportu=="pedestrian" || srodek_transportu=="bicycle") zarzadcaTrasy.addRequestOption(srodek_transportu);
-        Road trasa = zarzadcaTrasy.getRoad(punkty);
+        zarzadcaTrasy.addRequestOption("routeType="+transport_doURL);
+        Road trasa = new Road();
+        try
+        {
+            trasa = zarzadcaTrasy.getRoad(punkty);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         // utworzenie warstwy trasy i dodanie jej do mapy
         Polyline warstwaTrasy = RoadManager.buildRoadOverlay(trasa);
         mapa.getOverlays().add(warstwaTrasy);

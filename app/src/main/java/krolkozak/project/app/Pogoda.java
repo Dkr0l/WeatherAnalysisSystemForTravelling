@@ -84,7 +84,7 @@ public class Pogoda {
             // pobranie wartości opadów
             opady = String.valueOf(new BigDecimal(opadyJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
             jednostkaOpad = opadyJSON.getString("units");
-        } catch (JSONException e) {
+        } catch (JSONException | NumberFormatException e) {
             // jeśli nie uda się pobrać parametrów pogody - aplikacja wyrzuci wyjątek
             Log.i(nazwaApki, "Bląd danych pogodowych: " + e.getMessage());
             return null;
