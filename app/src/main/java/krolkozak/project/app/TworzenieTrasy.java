@@ -62,7 +62,7 @@ public class TworzenieTrasy extends Activity {
 
         // przypisanie okna tworzenia trasy do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
-            Intent popupIntent = new Intent(this, Popup.class);
+            Intent popupIntent = new Intent(this, PopupCzas.class);
             startActivityForResult(popupIntent, DATA_WYJAZDU);
         });
 

@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class Popup extends Activity {
+public class PopupPrzystanek extends Activity {
     private DatePicker wyborDaty;
     private TimePicker wyborGodziny;
     public int minuta, godzina, dzien, miesiac, rok;

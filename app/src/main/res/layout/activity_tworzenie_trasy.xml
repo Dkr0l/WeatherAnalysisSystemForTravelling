@@ -91,11 +91,18 @@
             android:text="Wybierz czas wyjazdu" />
 
         <Button
-            android:id="@+id/zatwierdzTrasePrzycisk"
+            android:id="@+id/dodajPunktPrzycisk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="ZATWIEDŹ TRASĘ" />
+            android:text="Dodaj przystanek" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/zatwierdzTrasePrzycisk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="ZATWIEDŹ TRASĘ" />
 
 </LinearLayout>
