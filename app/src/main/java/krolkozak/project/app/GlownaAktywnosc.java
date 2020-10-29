@@ -82,7 +82,6 @@ public class GlownaAktywnosc extends Activity {
         znajdzTrasePrzycisk.setEnabled(false);
     }
 
-
     // metoda prosząca użytkownika o zezwolenia na uprawnienia
     public void zapytajOUprawnieniaJesliKonieczne(String[] uprawnienia) {
         ArrayList<String> uprawnieniaDoUzyskania = new ArrayList<>();
@@ -140,7 +139,7 @@ public class GlownaAktywnosc extends Activity {
             case DANE_TRASY:
                 if (resultCode == Activity.RESULT_OK) {
                     trasa.srodek_transportu = data.getStringExtra("stworzono trase");
-                    Log.i(nazwaApki, "stworzono trase "+trasa.srodek_transportu);
+                    Log.i(nazwaApki, "stworzono trase " + trasa.srodek_transportu);
                 }
         }
     }
