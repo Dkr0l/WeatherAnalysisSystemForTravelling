@@ -60,10 +60,16 @@ public class TworzenieTrasy extends Activity {
         // utworzenie obkietu klasy Autouzupelnianie
         autouzupelnianie = new Autouzupelnianie(GlownaAktywnosc.kontekst, GlownaAktywnosc.trasa);
 
-        // przypisanie okna tworzenia trasy do przycisku
+        // przypisanie okna wybierania czasu wyjazdu do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
             Intent popupIntent = new Intent(this, PopupCzas.class);
             startActivityForResult(popupIntent, DATA_WYJAZDU);
+        });
+
+        // przypisanie okna dodawania przystanku do przycisku
+        ((Button) findViewById(R.id.dodajPunktPrzycisk)).setOnClickListener(v -> {
+            Intent popupIntent = new Intent(this, PopupPrzystanek.class);
+            startActivity(popupIntent);
         });
 
         // ustawienie pozycji na liście wyboru środka transportu

@@ -25,7 +25,7 @@ public class PopupCzas extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popupokno);
+        setContentView(R.layout.popupczas);
         DisplayMetrics parametryOkna = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(parametryOkna);
         int szerokosc = parametryOkna.widthPixels;

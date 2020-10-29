@@ -39,6 +39,7 @@ public class Trasa {
     // koordynaty geograficzne
     public double szerGeog1, dlugGeog1;
     public double szerGeog2, dlugGeog2;
+    public ArrayList<PunkPostoju> przystanki= new ArrayList<>();
     //środek transportu
     public String srodek_transportu;
     private String transport_doURL=new String();

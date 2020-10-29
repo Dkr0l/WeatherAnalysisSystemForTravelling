@@ -26,6 +26,9 @@
         <activity
             android:name=".PopupCzas"
             android:theme="@style/AppTheme.PopupTheme" />
+        <activity
+            android:name=".PopupPrzystanek"
+            android:theme="@style/AppTheme.PopupTheme" />
     </application>
 
 </manifest>
