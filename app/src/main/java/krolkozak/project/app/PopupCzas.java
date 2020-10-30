@@ -17,9 +17,9 @@ import java.time.ZoneOffset;
 public class PopupCzas extends Activity {
     private DatePicker wyborDaty;
     private TimePicker wyborGodziny;
-    public int minuta, godzina, dzien, miesiac, rok;
-    public boolean dataWybrana = false;
-    public OffsetDateTime czasWyjazdu;
+    private int minuta, godzina, dzien, miesiac, rok;
+    private boolean dataWybrana = false;
+    private OffsetDateTime czasWyjazdu;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override

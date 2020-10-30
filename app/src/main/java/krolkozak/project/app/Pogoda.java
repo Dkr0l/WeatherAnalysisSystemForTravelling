@@ -14,11 +14,11 @@ import java.util.List;
 
 public class Pogoda {
     // jednosta temperatury
-    public String jednostkaTemp;
+    protected String jednostkaTemp;
     // jednosta opadów
-    public String jednostkaOpad;
+    protected String jednostkaOpad;
     // czas do przyjazdu do celu podróży
-    public int czasDoPrzyjazdu;
+    protected int czasDoPrzyjazdu;
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
 

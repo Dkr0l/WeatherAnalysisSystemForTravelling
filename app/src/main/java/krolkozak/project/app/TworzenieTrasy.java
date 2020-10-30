@@ -19,20 +19,18 @@ import java.time.OffsetDateTime;
 
 public class TworzenieTrasy extends Activity {
     // pola tekstowe z autouzupełnianiem
-    public static AutoCompleteTextView poczatekAutouzupelnianie;
-    public static AutoCompleteTextView koniecAutouzupelnianie;
+    protected static AutoCompleteTextView poczatekAutouzupelnianie;
+    protected static AutoCompleteTextView koniecAutouzupelnianie;
     // przyciski
-    public static Button wyczyscPoczatekPrzycisk;
-    public static Button wyczyscKoniecPrzycisk;
-    // klawiatura
-    public static InputMethodManager inputMethodManager;
-    // menadżer lokalizacji
-    public static LocationManager manadzerLokalizacji;
-    // obiekt klasy Autouzupelnianie
-    private Autouzupelnianie autouzupelnianie;
-    public static Button zatwierdzTrasePrzycisk;
+    protected static Button wyczyscPoczatekPrzycisk;
+    protected static Button wyczyscKoniecPrzycisk;
+    protected static Button zatwierdzTrasePrzycisk;
     // komunikacja między aktywnościami
-    public static final int DATA_WYJAZDU = 101;
+    private static final int DATA_WYJAZDU = 101;
+    // klawiatura
+    protected static InputMethodManager inputMethodManager;
+    // menadżer lokalizacji
+    protected static LocationManager manadzerLokalizacji;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -58,7 +56,9 @@ public class TworzenieTrasy extends Activity {
         manadzerLokalizacji = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // utworzenie obkietu klasy Autouzupelnianie
-        autouzupelnianie = new Autouzupelnianie(GlownaAktywnosc.kontekst, GlownaAktywnosc.trasa);
+        //autouzupelnianie = new Autouzupelnianie();
+        Autouzupelnianie poczAuto=new Autouzupelnianie(poczatekAutouzupelnianie);
+        Autouzupelnianie koniecAuto=new Autouzupelnianie(koniecAutouzupelnianie);
 
         // przypisanie okna wybierania czasu wyjazdu do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
@@ -83,6 +83,19 @@ public class TworzenieTrasy extends Activity {
             intent.putExtra("stworzono trase", (String)lista_transport.getSelectedItem());
             setResult(Activity.RESULT_OK, intent);
             finish();
+        });
+
+        // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
+        GlownaAktywnosc.znajdzTrasePrzycisk.setOnClickListener(v -> {
+            // przypisz pobrane szerkości i długości geograficzne z pierwszego i drugiego pola wyboru trasy
+            // do zmiennych, które zostaną użyte przy tworzeniu trasy na mapie
+            GlownaAktywnosc.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
+            GlownaAktywnosc.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
+            GlownaAktywnosc.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
+            GlownaAktywnosc.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
+
+            // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
+            GlownaAktywnosc.trasa.odswiezMape(GlownaAktywnosc.kontekst);
         });
     }
 

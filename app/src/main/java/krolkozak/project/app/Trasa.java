@@ -35,19 +35,19 @@ public class Trasa {
     // rozmiar ramki wokół kadru widoku
     private final int ROZMIAR_RAMKI = 200;
     // widok mapy
-    public MapView mapa;
+    protected MapView mapa;
     // koordynaty geograficzne
-    public double szerGeog1, dlugGeog1;
-    public double szerGeog2, dlugGeog2;
-    public ArrayList<PunkPostoju> przystanki= new ArrayList<>();
+    protected double szerGeog1, dlugGeog1;
+    protected double szerGeog2, dlugGeog2;
+    protected ArrayList<PunkPostoju> przystanki= new ArrayList<>();
     //środek transportu
-    public String srodek_transportu;
+    protected String srodek_transportu;
     private String transport_doURL=new String();
     // lista punktów geograficznych
     private ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
-    public OffsetDateTime czasWyjazdu=OffsetDateTime.now();
+    protected OffsetDateTime czasWyjazdu=OffsetDateTime.now();
     //warunki pogodowe na trasie
     private Pogoda pogoda=new Pogoda();
 

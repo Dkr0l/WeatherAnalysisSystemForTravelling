@@ -11,35 +11,33 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import org.osmdroid.config.Configuration;
-
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class GlownaAktywnosc extends Activity {
+
     // -------------- ZMIENNE KLASY --------------
     // kod żądania uprawnień od użytkownika
     private final int kodZadaniaUprawnien = 1;
     // pomocnicza nazwa aplikacji do debuggowania
-    public static final String nazwaApki = "TRAVEL_APP";
-    // kontekst aplikacji
-    public static Context kontekst;
+    protected static final String nazwaApki = "TRAVEL_APP";
     // przyciski
-    public static Button znajdzTrasePrzycisk;
+    protected static Button znajdzTrasePrzycisk;
     // komunikacja między aktywnościami
-    public static final int DANE_TRASY = 102;
+    private static final int DANE_TRASY = 102;
     // obiekt klasy Trasa
-    public static Trasa trasa = new Trasa();
+    protected static Trasa trasa = new Trasa();
+    //kontekst aplikacji
+    protected static Context kontekst;
 
     // -------------- GŁÓWNA METODA APLIKACJI WYWOŁYWANA PO URUCHOMIENIU --------------
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         // wywołanie konstruktora klasy nadrzędnej z parametrem zapisanego stanu aplikacji i
         // ustawienie układu aplikacji (layout'u)
         super.onCreate(savedInstanceState);
@@ -50,8 +48,8 @@ public class GlownaAktywnosc extends Activity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // pobranie kontekstu aplikacji
-        kontekst = getApplicationContext();
+        // zapisanie kontekstu aplikacji
+        kontekst=getApplicationContext();
 
         // zapytanie użytkownika o uprawnienia potrzebne do działania aplikacji (zapisywanie i lokalizacja)
         Configuration.getInstance().load(kontekst, PreferenceManager.getDefaultSharedPreferences(kontekst));
@@ -135,6 +133,7 @@ public class GlownaAktywnosc extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case DANE_TRASY:
                 if (resultCode == Activity.RESULT_OK) {
