@@ -11,10 +11,13 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import org.osmdroid.config.Configuration;
+
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -49,7 +52,7 @@ public class GlownaAktywnosc extends Activity {
         StrictMode.setThreadPolicy(policy);
 
         // zapisanie kontekstu aplikacji
-        kontekst=getApplicationContext();
+        kontekst = getApplicationContext();
 
         // zapytanie użytkownika o uprawnienia potrzebne do działania aplikacji (zapisywanie i lokalizacja)
         Configuration.getInstance().load(kontekst, PreferenceManager.getDefaultSharedPreferences(kontekst));
