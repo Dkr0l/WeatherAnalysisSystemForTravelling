@@ -8,7 +8,7 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#F3F3F3"
+        android:background="@color/colorPopupBackground"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
