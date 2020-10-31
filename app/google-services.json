@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1031851269532",
+    "firebase_url": "https://travel-app-e4f8a.firebaseio.com",
+    "project_id": "travel-app-e4f8a",
+    "storage_bucket": "travel-app-e4f8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031851269532:android:547cde6f932f6590bb7c59",
+        "android_client_info": {
+          "package_name": "krolkozak.project.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031851269532-rg4l251v1m1e8q7nogt1egsjai29ccer.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARKq1nQEP2Mh6ClfK2MmcWkMOlnJN8yV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031851269532-rg4l251v1m1e8q7nogt1egsjai29ccer.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
