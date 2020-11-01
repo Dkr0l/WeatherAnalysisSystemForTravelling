@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -43,11 +44,9 @@ public class Autouzupelnianie {
     private JSONObject PodpowiedziJSON;
     // podpowiedzi do pola z autouzupełnianiem w formacie tablicy JSON
     private JSONArray miejsca;
-    private AutoCompleteTextView poleEdycyjne;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Autouzupelnianie(AutoCompleteTextView poleAutouzupelnianie) {
-        poleEdycyjne=poleAutouzupelnianie;
+    public Autouzupelnianie(AutoCompleteTextView poleAutouzupelnianie, Button wyczyscPolePrzycisk) {
         // wywołanie metody która pobierze lokalizację GPS i uzupełni pierwsze pole tekstowe
         this.pobierzLokalizacjeGPS();
 
@@ -55,7 +54,7 @@ public class Autouzupelnianie {
         wylaczPrzycisk();
 
         // dodanie nasłuchiwacza zmiany tekstu to pierwszego pola tekstowego (początek trasy)
-        poleEdycyjne.addTextChangedListener(new TextWatcher() {
+        poleAutouzupelnianie.addTextChangedListener(new TextWatcher() {
             @SuppressLint("NewApi")
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -119,7 +118,7 @@ public class Autouzupelnianie {
 
                         // utworzenie listy podpowiedzi do wyświetlenia i przypisanie do pierwszego pola tektsowego
                         ArrayAdapter adapterListy = new ArrayAdapter<String>(GlownaAktywnosc.kontekst, android.R.layout.simple_dropdown_item_1line, podpowiedzi);
-                        poleEdycyjne.setAdapter(adapterListy);
+                        poleAutouzupelnianie.setAdapter(adapterListy);
                         adapterListy.notifyDataSetChanged();
                     } catch (JSONException e) {
                         Log.i(nazwaApki, "Blad podpowiedzi: " + e.getMessage());
@@ -138,7 +137,7 @@ public class Autouzupelnianie {
         });
 
         // dodanie nasłuchiwacza kliknięcia w podpowiedź w pierwszym polu tekstowym
-        poleEdycyjne.setOnItemClickListener((parent, arg1, pos, id) -> {
+        poleAutouzupelnianie.setOnItemClickListener((parent, arg1, pos, id) -> {
             JSONObject podpowiedziJSON;
 
             try {
@@ -159,11 +158,11 @@ public class Autouzupelnianie {
         });
 
         // dodanie nasłuchiwacza kliknięcia w przycisk "WYCZYŚĆ" - wyczyszczenie pierwszego pola tekstowego
-        TworzenieTrasy.wyczyscPoczatekPrzycisk.setOnClickListener(v -> {
+        wyczyscPolePrzycisk.setOnClickListener(v -> {
             Log.i(nazwaApki, "Wyczyszczono pierwsze pole tekstowe!");
 
             // ustawia zawartość pierwszego pola tekstowego na pustą
-            poleEdycyjne.setText("");
+            poleAutouzupelnianie.setText("");
         });
     }
 

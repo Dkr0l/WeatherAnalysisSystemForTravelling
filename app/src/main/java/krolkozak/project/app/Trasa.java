@@ -42,7 +42,7 @@ public class Trasa {
     protected ArrayList<PunkPostoju> przystanki= new ArrayList<>();
     //środek transportu
     protected String srodek_transportu;
-    private String transport_doURL=new String();
+    private String transport_doURL= "";
     // lista punktów geograficznych
     private ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
@@ -130,10 +130,17 @@ public class Trasa {
             // -------------- ZAPYTANIE O TRASĘ (mapquestapi.com) --------------
             // złączenie adresu url w jedną zmienną, która zawiera podstawową domenę zapytań API,
             // klucz, jednostki w kilometrach oraz koordynaty początkowe i końcowe trasy
-            String url = "http://www.mapquestapi.com/directions/v2/route?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&unit=k&from=" + koordynaty1 + "&to=" + koordynaty2+"&routeType="+transport_doURL;
+            StringBuilder url = new StringBuilder("http://www.mapquestapi.com/directions/v2/optimizedroute?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&unit=k&json={\"locations\":[\"" + koordynaty1 + "\",");
+            if(przystanki.size()>0){
+                for(int numPrzystanku=0; numPrzystanku<przystanki.size();numPrzystanku++){
+                    PunkPostoju przystanek = przystanki.get(numPrzystanku);
+                    url.append("\"").append(przystanek.getSzerGeog()).append(",").append(przystanek.getDlugGeog()).append("\",");
+                }
+            }
+            url.append("\"").append(koordynaty2).append("\"]}&routeType=").append(transport_doURL);
             Log.i(nazwaApki, "mapa url: " + url);
             // zapisanie wyniku zapytania do ciągu buforu
-            StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url);
+            StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url.toString());
 
             //pobranie trasy z zapytania
             trasaJSON = (JSONObject) (new JSONObject(String.valueOf(odpowiedz))).get("route");
@@ -176,6 +183,12 @@ public class Trasa {
         try {
             // dodanie punktów geograficznych do listy
             punkty.add(new GeoPoint(szerGeog1, dlugGeog1));
+            if(przystanki.size()>0) {
+                for (int numPrzystanku = 0; numPrzystanku < przystanki.size(); numPrzystanku++) {
+                    PunkPostoju przystanek = przystanki.get(numPrzystanku);
+                    punkty.add(new GeoPoint(przystanek.getSzerGeog(), przystanek.getDlugGeog()));
+                }
+            }
             punkty.add(new GeoPoint(szerGeog2, dlugGeog2));
 
             // -------------- KADROWANIE EKRANU --------------
@@ -225,29 +238,32 @@ public class Trasa {
         // -------------- PRZEJŚCIE PO CAŁEJ TRASIE I DODANIE PUNKTÓW POGODOWYCH Z OBLICZONYM ODSTĘPEM --------------
         try {
             // pobranie punktów manewrowych
-            JSONArray manewryJSON = trasa.getJSONArray("legs").getJSONObject(0).getJSONArray("maneuvers");
+            JSONArray obiektLegsJSON = trasa.getJSONArray("legs");
             JSONObject manewr;
-            JSONObject koordynatyJSON=new JSONObject();
-            JSONObject koordynatyPoprzednieJSON=new JSONObject();
-            int dodanePunkty=0;
+            JSONObject koordynatyJSON = new JSONObject();
+            JSONObject koordynatyPoprzednieJSON = new JSONObject();
+            for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
+                JSONArray manewryJSON=obiektLegsJSON.getJSONObject(numOdcinka).getJSONArray("maneuvers");
+                int dodanePunkty = 0;
 
-            // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
-            for (int i = 0; i < manewryJSON.length(); i++) {
-                // pobranie czasu z punktu manewrowego
-                manewr = (JSONObject) manewryJSON.get(i);
-                sumaCzasu += manewr.getInt("time");
+                // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
+                for (int i = 0; i < manewryJSON.length(); i++) {
+                    // pobranie czasu z punktu manewrowego
+                    manewr = (JSONObject) manewryJSON.get(i);
+                    sumaCzasu += manewr.getInt("time");
 
-                // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie
-                if (sumaCzasu > odstep) {
-                    if(dodanePunkty>0) koordynatyPoprzednieJSON=koordynatyJSON;
-                    koordynatyJSON = manewr.getJSONObject("startPoint");
-                    if(sumaCzasu>=1.5*odstep && dodanePunkty>0){
-                        dodajPunktyWLiniProstej(koordynatyPoprzednieJSON.getDouble("lat"), koordynatyJSON.getDouble("lat"), koordynatyPoprzednieJSON.getDouble("lng"), koordynatyJSON.getDouble("lng"), odstep, sumaCzasu, sekundy, kontekst);
+                    // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie
+                    if (sumaCzasu > odstep) {
+                        if (dodanePunkty > 0) koordynatyPoprzednieJSON = koordynatyJSON;
+                        koordynatyJSON = manewr.getJSONObject("startPoint");
+                        if (sumaCzasu >= 1.5 * odstep && dodanePunkty > 0) {
+                            dodajPunktyWLiniProstej(koordynatyPoprzednieJSON.getDouble("lat"), koordynatyJSON.getDouble("lat"), koordynatyPoprzednieJSON.getDouble("lng"), koordynatyJSON.getDouble("lng"), odstep, sumaCzasu, sekundy, kontekst);
+                        }
+                        sekundy += sumaCzasu;
+                        sumaCzasu = 0;
+                        dodanePunkty++;
+                        dodajPunktPogodowy(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng"), czasWyjazdu.plusSeconds(sekundy), kontekst);
                     }
-                    sekundy += sumaCzasu;
-                    sumaCzasu = 0;
-                    dodanePunkty++;
-                    dodajPunktPogodowy(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng"), czasWyjazdu.plusSeconds(sekundy), kontekst);
                 }
             }
             JSONObject cel = trasa.getJSONObject("boundingBox").getJSONObject("ul");
@@ -299,21 +315,26 @@ public class Trasa {
 
         // -------------- SFORMATOWANIE ADRESU ORAZ DATY I WYSWIETLENIE --------------
         // pobranie adresu na podstawie koordynatów geograficznych
-        Address adres = new Geocoder(kontekst).getFromLocation(szerGeog, dlugGeog, 1).get(0);
-        Log.i(nazwaApki, "Address: " + adres.toString());
-        // pobranie nazwy lokalizacji z adresu
-        String nazwaLokacji = adres.getAdminArea() + ", " + adres.getCountryName();
-        Log.i(nazwaApki, "Nazwa Lokacji: " + adres.getLocality());
-        if (adres.getLocality() != null) {
-            nazwaLokacji = adres.getLocality() + ", " + nazwaLokacji;
-        } else {
-            nazwaLokacji = adres.getSubAdminArea() + ", " + nazwaLokacji;
+        try {
+            Address adres = new Geocoder(kontekst).getFromLocation(szerGeog, dlugGeog, 1).get(0);
+            Log.i(nazwaApki, "Address: " + adres.toString());
+            // pobranie nazwy lokalizacji z adresu
+            String nazwaLokacji = adres.getAdminArea() + ", " + adres.getCountryName();
+            Log.i(nazwaApki, "Nazwa Lokacji: " + adres.getLocality());
+            if (adres.getLocality() != null) {
+                nazwaLokacji = adres.getLocality() + ", " + nazwaLokacji;
+            } else {
+                nazwaLokacji = adres.getSubAdminArea() + ", " + nazwaLokacji;
+            }
+            Log.i(nazwaApki, "Location: " + nazwaLokacji);
+            // sformatowanie pełnej daty
+            String pelnaData = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(data);
+            // ustawienie opisu znacznika - lokalizacja i data
+            znacznik.setSubDescription(nazwaLokacji + "<br>" + pelnaData);
         }
-        Log.i(nazwaApki, "Location: " + nazwaLokacji);
-        // sformatowanie pełnej daty
-        String pelnaData = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(data);
-        // ustawienie opisu znacznika - lokalizacja i data
-        znacznik.setSubDescription(nazwaLokacji + "<br>" + pelnaData);
+        catch (IndexOutOfBoundsException e){
+
+        }
 
         // -------------- DODANIE ZNACZNIKA NA MAPE --------------
         mapa.getOverlays().add(znacznik);

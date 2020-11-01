@@ -1,22 +1,14 @@
 package krolkozak.project.app;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.NumberPicker;
-import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
-import static krolkozak.project.app.GlownaAktywnosc.trasa;
 
 public class PopupPrzystanek extends Activity {
 
@@ -39,7 +31,7 @@ public class PopupPrzystanek extends Activity {
         dlugoscPostojuGodziny.setMaxValue(24);
 
         int czasPostojuMinuty=dlugoscPostojuMinuty.getValue()+60*dlugoscPostojuGodziny.getValue();
-        Autouzupelnianie przystanekAuto=new Autouzupelnianie(przystanekAutouzupelnianie);
+        Autouzupelnianie przystanekAuto=new Autouzupelnianie(przystanekAutouzupelnianie, findViewById(R.id.wyczyscPrzystanekPrzycisk));
         dodajPrzystanekPrzycisk.setOnClickListener(v -> {
             //dodanie przystanku do listy punktów
             GlownaAktywnosc.trasa.przystanki.add(new PunkPostoju(przystanekAuto.pomocSzerGeog, przystanekAuto.pomocDlugGeog, przystanekAuto.nazwaMiejsca, czasPostojuMinuty));

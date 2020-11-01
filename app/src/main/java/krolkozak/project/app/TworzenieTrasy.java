@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import androidx.annotation.RequiresApi;
 
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 public class TworzenieTrasy extends Activity {
     // pola tekstowe z autouzupełnianiem
@@ -57,8 +58,8 @@ public class TworzenieTrasy extends Activity {
 
         // utworzenie obkietu klasy Autouzupelnianie
         //autouzupelnianie = new Autouzupelnianie();
-        Autouzupelnianie poczAuto=new Autouzupelnianie(poczatekAutouzupelnianie);
-        Autouzupelnianie koniecAuto=new Autouzupelnianie(koniecAutouzupelnianie);
+        Autouzupelnianie poczAuto=new Autouzupelnianie(poczatekAutouzupelnianie, wyczyscPoczatekPrzycisk);
+        Autouzupelnianie koniecAuto=new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk);
 
         // przypisanie okna wybierania czasu wyjazdu do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
@@ -96,6 +97,7 @@ public class TworzenieTrasy extends Activity {
 
             // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
             GlownaAktywnosc.trasa.odswiezMape(GlownaAktywnosc.kontekst);
+            GlownaAktywnosc.trasa.przystanki.clear();
         });
     }
 
@@ -105,8 +107,12 @@ public class TworzenieTrasy extends Activity {
         switch (requestCode) {
             case DATA_WYJAZDU:
                 if (resultCode == Activity.RESULT_OK) {
-                    GlownaAktywnosc.trasa.czasWyjazdu = (OffsetDateTime) data.getExtras().getSerializable("czasWyjazdu");
-                    Log.i(GlownaAktywnosc.nazwaApki, "Ustawiono czas wyjazdu: " + GlownaAktywnosc.trasa.czasWyjazdu);
+                    if(PopupCzas.dataWybrana) {
+                        GlownaAktywnosc.trasa.czasWyjazdu = (OffsetDateTime) Objects.requireNonNull(data.getExtras()).getSerializable("czasWyjazdu");
+                        Log.i(GlownaAktywnosc.nazwaApki, "Ustawiono czas wyjazdu: " + GlownaAktywnosc.trasa.czasWyjazdu);
+                    }else{
+                        GlownaAktywnosc.trasa.czasWyjazdu=OffsetDateTime.now();
+                    }
                 }
         }
     }

@@ -18,7 +18,7 @@ public class PopupCzas extends Activity {
     private DatePicker wyborDaty;
     private TimePicker wyborGodziny;
     private int minuta, godzina, dzien, miesiac, rok;
-    private boolean dataWybrana = false;
+    protected static boolean dataWybrana = false;
     private OffsetDateTime czasWyjazdu;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
