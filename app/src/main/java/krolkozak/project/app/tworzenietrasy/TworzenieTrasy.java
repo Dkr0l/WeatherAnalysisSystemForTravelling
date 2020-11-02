@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +17,12 @@ import androidx.annotation.RequiresApi;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
+import krolkozak.project.app.R;
+import krolkozak.project.app.tworzenietrasy.popup.PopupCzas;
+import krolkozak.project.app.tworzenietrasy.popup.PopupPrzystanek;
+
+import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
 public class TworzenieTrasy extends Activity {
     // pola tekstowe z autouzupełnianiem
@@ -37,9 +43,9 @@ public class TworzenieTrasy extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tworzenie_trasy);
+        setContentView(R.layout.tworzenie_trasy);
 
-        Log.i(GlownaAktywnosc.nazwaApki, "Test");
+        Log.i(nazwaApki, "Test");
 
         // -------------- INICJALIZACJA ZMIENNYCH --------------
         // przypisanie referencji
@@ -58,8 +64,8 @@ public class TworzenieTrasy extends Activity {
 
         // utworzenie obkietu klasy Autouzupelnianie
         //autouzupelnianie = new Autouzupelnianie();
-        Autouzupelnianie poczAuto=new Autouzupelnianie(poczatekAutouzupelnianie, wyczyscPoczatekPrzycisk);
-        Autouzupelnianie koniecAuto=new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk);
+        Autouzupelnianie poczAuto = new Autouzupelnianie(poczatekAutouzupelnianie, wyczyscPoczatekPrzycisk);
+        Autouzupelnianie koniecAuto = new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk);
 
         // przypisanie okna wybierania czasu wyjazdu do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
@@ -81,23 +87,23 @@ public class TworzenieTrasy extends Activity {
 
         zatwierdzTrasePrzycisk.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.putExtra("stworzono trase", (String)lista_transport.getSelectedItem());
+            intent.putExtra("stworzono trase", (String) lista_transport.getSelectedItem());
             setResult(Activity.RESULT_OK, intent);
             finish();
         });
 
         // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
-        GlownaAktywnosc.znajdzTrasePrzycisk.setOnClickListener(v -> {
+        Mapa.znajdzTrasePrzycisk.setOnClickListener(v -> {
             // przypisz pobrane szerkości i długości geograficzne z pierwszego i drugiego pola wyboru trasy
             // do zmiennych, które zostaną użyte przy tworzeniu trasy na mapie
-            GlownaAktywnosc.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
-            GlownaAktywnosc.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
-            GlownaAktywnosc.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
-            GlownaAktywnosc.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
+            Mapa.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
+            Mapa.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
+            Mapa.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
+            Mapa.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
 
             // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
-            GlownaAktywnosc.trasa.odswiezMape(GlownaAktywnosc.kontekst);
-            GlownaAktywnosc.trasa.przystanki.clear();
+            Mapa.trasa.odswiezMape(Mapa.kontekst);
+            Mapa.trasa.przystanki.clear();
         });
     }
 
@@ -107,11 +113,11 @@ public class TworzenieTrasy extends Activity {
         switch (requestCode) {
             case DATA_WYJAZDU:
                 if (resultCode == Activity.RESULT_OK) {
-                    if(PopupCzas.dataWybrana) {
-                        GlownaAktywnosc.trasa.czasWyjazdu = (OffsetDateTime) Objects.requireNonNull(data.getExtras()).getSerializable("czasWyjazdu");
-                        Log.i(GlownaAktywnosc.nazwaApki, "Ustawiono czas wyjazdu: " + GlownaAktywnosc.trasa.czasWyjazdu);
-                    }else{
-                        GlownaAktywnosc.trasa.czasWyjazdu=OffsetDateTime.now();
+                    if (PopupCzas.dataWybrana) {
+                        Mapa.trasa.czasWyjazdu = (OffsetDateTime) Objects.requireNonNull(data.getExtras()).getSerializable("czasWyjazdu");
+                        Log.i(nazwaApki, "Ustawiono czas wyjazdu: " + Mapa.trasa.czasWyjazdu);
+                    } else {
+                        Mapa.trasa.czasWyjazdu = OffsetDateTime.now();
                     }
                 }
         }

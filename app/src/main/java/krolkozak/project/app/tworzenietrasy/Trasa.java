@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 import android.content.Context;
 import android.location.Address;
@@ -30,24 +30,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import krolkozak.project.app.InterfejsAPI;
+import krolkozak.project.app.R;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Trasa {
     // rozmiar ramki wokół kadru widoku
     private final int ROZMIAR_RAMKI = 200;
     // widok mapy
-    protected MapView mapa;
+    public MapView mapa;
     // koordynaty geograficzne
-    protected double szerGeog1, dlugGeog1;
-    protected double szerGeog2, dlugGeog2;
-    protected ArrayList<PunkPostoju> przystanki= new ArrayList<>();
+    public double szerGeog1, dlugGeog1;
+    public double szerGeog2, dlugGeog2;
+    public ArrayList<PunkPostoju> przystanki= new ArrayList<>();
     //środek transportu
-    protected String srodek_transportu;
+    public String srodek_transportu;
     private String transport_doURL= "";
     // lista punktów geograficznych
-    private ArrayList<GeoPoint> punkty = new ArrayList<>();
+    public ArrayList<GeoPoint> punkty = new ArrayList<>();
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
-    protected OffsetDateTime czasWyjazdu=OffsetDateTime.now();
+    public OffsetDateTime czasWyjazdu=OffsetDateTime.now();
     //warunki pogodowe na trasie
     private Pogoda pogoda=new Pogoda();
 

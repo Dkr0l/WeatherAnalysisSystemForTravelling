@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,29 +13,30 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.config.Configuration;
 
 import java.util.ArrayList;
 
+import krolkozak.project.app.R;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class GlownaAktywnosc extends Activity {
+public class Mapa extends AppCompatActivity {
 
     // -------------- ZMIENNE KLASY --------------
     // kod żądania uprawnień od użytkownika
     private final int kodZadaniaUprawnien = 1;
     // pomocnicza nazwa aplikacji do debuggowania
-    protected static final String nazwaApki = "TRAVEL_APP";
+    public static final String nazwaApki = "TRAVEL_APP";
     // przyciski
-    protected static Button znajdzTrasePrzycisk;
+    public static Button znajdzTrasePrzycisk;
     // komunikacja między aktywnościami
     private static final int DANE_TRASY = 102;
     // obiekt klasy Trasa
-    protected static Trasa trasa = new Trasa();
+    public static Trasa trasa = new Trasa();
     //kontekst aplikacji
     protected static Context kontekst;
 
@@ -46,7 +47,8 @@ public class GlownaAktywnosc extends Activity {
         // wywołanie konstruktora klasy nadrzędnej z parametrem zapisanego stanu aplikacji i
         // ustawienie układu aplikacji (layout'u)
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.glowna_aktywnosc);
+        setContentView(R.layout.mapa);
+        getSupportActionBar().hide();
 
         // -------------- POLITYKA I UPRAWNIENIA --------------
         // zezwolenie na wszystkie potrzebne uprawnienia
@@ -83,35 +85,6 @@ public class GlownaAktywnosc extends Activity {
 
         znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
         znajdzTrasePrzycisk.setEnabled(false);
-
-        // TESTOWANIE BAZY DANYCH -----------------------------------------------
-        // Odnośnik do bazy danych
-        FirebaseFirestore bazaDanychRef = FirebaseFirestore.getInstance();
-
-        // Wprowadzenie nowego użytkownika do tabeli uzytkownicy
-//        Uzytkownik uzytkownik1 = new Uzytkownik("id1", "login1", "haslo1", "email1", String.valueOf(OffsetDateTime.now()));
-//        Log.i(nazwaApki, "Wprowadzanie nowego użytkownika: " + uzytkownik1.pobierzPelneDane());
-//        bazaDanychRef.collection("uzytkownicy").add(uzytkownik1);
-
-        // Pobieranie wszystkich rekordów z tabeli uzytkownicy
-        Log.i(nazwaApki, "Pobieranie użytkowników z bazy");
-        bazaDanychRef.collection("uzytkownicy").get().addOnSuccessListener(documentSnapshots -> {
-            if (documentSnapshots.isEmpty()) {
-                Log.i(nazwaApki, "Nie znaleziono użytkowników");
-                return;
-            } else {
-                Log.i(nazwaApki, "Pobrano użytkowników z bazy (" + documentSnapshots.size() + "):");
-
-                ArrayList<Uzytkownik> uzytkownicy = new ArrayList<Uzytkownik>();
-                ArrayList<Uzytkownik> types = (ArrayList<Uzytkownik>) documentSnapshots.toObjects(Uzytkownik.class);
-                uzytkownicy.addAll(types);
-
-                for (Uzytkownik uzytkownik : uzytkownicy) {
-                    Log.i(nazwaApki, "Użytkownik: " + uzytkownik.pobierzPelneDane());
-                }
-
-            }
-        });
     }
 
     // metoda prosząca użytkownika o zezwolenia na uprawnienia

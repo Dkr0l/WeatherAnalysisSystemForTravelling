@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.bazadanych;
 
 public class Uzytkownik {
     String id, login, haslo, email, data_utworzenia;

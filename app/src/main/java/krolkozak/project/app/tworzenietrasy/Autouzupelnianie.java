@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -30,10 +28,12 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 
+import krolkozak.project.app.InterfejsAPI;
+
 public class Autouzupelnianie {
     // koordynaty geograficzne pomocnicze
-    protected double pomocSzerGeog, pomocDlugGeog;
-    protected String nazwaMiejsca;
+    public double pomocSzerGeog, pomocDlugGeog;
+    public String nazwaMiejsca;
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
     // zmienna logiczna sprawdzająca czy pobrano lokalizację z GPS
@@ -117,7 +117,7 @@ public class Autouzupelnianie {
                         Log.i(nazwaApki, "HINTS: " + Arrays.toString(podpowiedzi));
 
                         // utworzenie listy podpowiedzi do wyświetlenia i przypisanie do pierwszego pola tektsowego
-                        ArrayAdapter adapterListy = new ArrayAdapter<String>(GlownaAktywnosc.kontekst, android.R.layout.simple_dropdown_item_1line, podpowiedzi);
+                        ArrayAdapter adapterListy = new ArrayAdapter<String>(Mapa.kontekst, android.R.layout.simple_dropdown_item_1line, podpowiedzi);
                         poleAutouzupelnianie.setAdapter(adapterListy);
                         adapterListy.notifyDataSetChanged();
                     } catch (JSONException e) {
@@ -175,8 +175,8 @@ public class Autouzupelnianie {
         TworzenieTrasy.zatwierdzTrasePrzycisk.setText("WYBIERZ PUNKTY");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(false);
 
-        GlownaAktywnosc.znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
-        GlownaAktywnosc.znajdzTrasePrzycisk.setEnabled(false);
+        Mapa.znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
+        Mapa.znajdzTrasePrzycisk.setEnabled(false);
     }
 
     // -------------- WŁĄCZENIE PRZYCISKU WYSZUKANIA TRASY --------------
@@ -187,8 +187,8 @@ public class Autouzupelnianie {
         Log.i(nazwaApki, "WŁĄCZONO PRZYCISK");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setText("ZATWIERDŹ TRASĘ");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(true);
-        GlownaAktywnosc.znajdzTrasePrzycisk.setText("ZNAJDŹ TRASĘ");
-        GlownaAktywnosc.znajdzTrasePrzycisk.setEnabled(true);
+        Mapa.znajdzTrasePrzycisk.setText("ZNAJDŹ TRASĘ");
+        Mapa.znajdzTrasePrzycisk.setEnabled(true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -205,7 +205,7 @@ public class Autouzupelnianie {
 
                     try {
                         // ustalenie adresu urządzenia na podstawie wcześniej pobranych długosci i szerokości geograficznych
-                        Address adres = new Geocoder(GlownaAktywnosc.kontekst).getFromLocation(pomocSzerGeog, pomocDlugGeog, 1).get(0);
+                        Address adres = new Geocoder(Mapa.kontekst).getFromLocation(pomocSzerGeog, pomocDlugGeog, 1).get(0);
                         Log.i(nazwaApki, "Adres: " + adres);
                         String nazwaLokacji = adres.getAdminArea() + ", " + adres.getCountryName();
                         Log.i(nazwaApki, "Nazwa Lokacji: " + adres.getLocality());
@@ -240,7 +240,7 @@ public class Autouzupelnianie {
 
             // jeśli użytkownik zezwolił na pobieranie lokalizacji przez aplikację - wymuś pojedyńczą aktualizację lokalizacji
             // jeśli nie zezwolił - użytkownik będzie musiał sam wpisać początkową lokalizację
-            if (!(ActivityCompat.checkSelfPermission(GlownaAktywnosc.kontekst, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(GlownaAktywnosc.kontekst, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            if (!(ActivityCompat.checkSelfPermission(Mapa.kontekst, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Mapa.kontekst, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
                 TworzenieTrasy.manadzerLokalizacji.requestSingleUpdate(LocationManager.GPS_PROVIDER, nasluchiwaczLokalizacji, null);
             }
         } catch (Exception e) {

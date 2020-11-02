@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 import android.util.Log;
 
@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
+
+import krolkozak.project.app.InterfejsAPI;
 
 public class Pogoda {
     // jednosta temperatury

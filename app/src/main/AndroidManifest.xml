@@ -15,8 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TworzenieTrasy"></activity>
-        <activity android:name=".GlownaAktywnosc">
+        <activity android:name=".ekrany.Menu"></activity>
+        <activity android:name=".ekrany.Logowanie">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".tworzenietrasy.TworzenieTrasy" />
+        <activity android:name=".tworzenietrasy.Mapa">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +32,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PopupCzas"
+            android:name=".tworzenietrasy.popup.PopupCzas"
             android:theme="@style/AppTheme.PopupTheme" />
         <activity
-            android:name=".PopupPrzystanek"
+            android:name=".tworzenietrasy.popup.PopupPrzystanek"
             android:theme="@style/AppTheme.PopupTheme" />
     </application>
 

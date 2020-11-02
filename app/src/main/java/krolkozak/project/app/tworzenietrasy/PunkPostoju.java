@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy;
 
 public class PunkPostoju {
     private double szerGeog, dlugGeog;

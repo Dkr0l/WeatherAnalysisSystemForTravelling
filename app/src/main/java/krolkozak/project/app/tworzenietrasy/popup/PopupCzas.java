@@ -1,4 +1,4 @@
-package krolkozak.project.app;
+package krolkozak.project.app.tworzenietrasy.popup;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,18 +14,20 @@ import androidx.annotation.RequiresApi;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+import krolkozak.project.app.R;
+
 public class PopupCzas extends Activity {
     private DatePicker wyborDaty;
     private TimePicker wyborGodziny;
     private int minuta, godzina, dzien, miesiac, rok;
-    protected static boolean dataWybrana = false;
+    public static boolean dataWybrana = false;
     private OffsetDateTime czasWyjazdu;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popupczas);
+        setContentView(R.layout.popup_czas);
         DisplayMetrics parametryOkna = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(parametryOkna);
         int szerokosc = parametryOkna.widthPixels;
