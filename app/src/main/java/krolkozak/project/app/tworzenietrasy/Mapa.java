@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import krolkozak.project.app.R;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class Mapa extends AppCompatActivity {
+public class Mapa extends Activity {
 
     // -------------- ZMIENNE KLASY --------------
     // kod żądania uprawnień od użytkownika
@@ -48,7 +47,6 @@ public class Mapa extends AppCompatActivity {
         // ustawienie układu aplikacji (layout'u)
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mapa);
-        getSupportActionBar().hide();
 
         // -------------- POLITYKA I UPRAWNIENIA --------------
         // zezwolenie na wszystkie potrzebne uprawnienia

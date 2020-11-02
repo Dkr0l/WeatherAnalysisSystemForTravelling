@@ -1,5 +1,6 @@
 package krolkozak.project.app.ekrany;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,8 +8,6 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -16,23 +15,16 @@ import java.util.ArrayList;
 
 import krolkozak.project.app.R;
 import krolkozak.project.app.bazadanych.Uzytkownik;
-import krolkozak.project.app.DaneAplikacji;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class Logowanie extends AppCompatActivity {
-    public static DaneAplikacji daneAplikacji;
+public class Logowanie extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logowanie);
-        getSupportActionBar().hide();
-
-        daneAplikacji = new ViewModelProvider(this).get(DaneAplikacji.class);
-        Uzytkownik daneUzytkownik = daneAplikacji.uzytkownik.getValue();
-        Log.i(nazwaApki, "Użytkownik z danych aplikacji: " + daneUzytkownik);
 
         // Kliknięcie w przycisk "ZALOGUJ SIĘ"
         ((Button) findViewById(R.id.zalogujPrzycisk)).setOnClickListener(v -> {
