@@ -1,12 +1,13 @@
 package krolkozak.project.app;
 
 public class Uzytkownik {
-    String login, haslo, email, data_utworzenia;
+    String id, login, haslo, email, data_utworzenia;
 
     public Uzytkownik() {
     }
 
-    public Uzytkownik(String login, String haslo, String email, String data_utworzenia) {
+    public Uzytkownik(String id, String login, String haslo, String email, String data_utworzenia) {
+        this.id = id;
         this.login = login;
         this.haslo = haslo;
         this.email = email;
@@ -14,7 +15,15 @@ public class Uzytkownik {
     }
 
     public String pobierzPelneDane() {
-        return this.login + ", " + this.haslo + ", " + this.email + ", " + this.data_utworzenia;
+        return this.id + ", " + this.login + ", " + this.haslo + ", " + this.email + ", " + this.data_utworzenia;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLogin() {

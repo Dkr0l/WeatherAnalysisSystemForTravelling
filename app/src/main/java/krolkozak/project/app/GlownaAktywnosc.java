@@ -16,12 +16,10 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.config.Configuration;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -86,18 +84,34 @@ public class GlownaAktywnosc extends Activity {
         znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
         znajdzTrasePrzycisk.setEnabled(false);
 
-        // TESTOWANIE BAZY DANYCH -------------------------------------------------
-
+        // TESTOWANIE BAZY DANYCH -----------------------------------------------
         // Odnośnik do bazy danych
-        FirebaseDatabase bazaDanychRef = FirebaseDatabase.getInstance();
-        // Odnośnik do tabeli uzytkownicy
-        DatabaseReference uzytkownicyRef = bazaDanychRef.getReference("uzytkownicy");
+        FirebaseFirestore bazaDanychRef = FirebaseFirestore.getInstance();
 
-        // Utworzenie nowego użytkownika i wprowadzenie go do tabeli uzytkownicy
-        Uzytkownik uzytkownik1 = new Uzytkownik("login2", "haslo2", "email2", String.valueOf(OffsetDateTime.now()));
-        uzytkownicyRef.child("email2").setValue(uzytkownik1);
+        // Wprowadzenie nowego użytkownika do tabeli uzytkownicy
+//        Uzytkownik uzytkownik1 = new Uzytkownik("id1", "login1", "haslo1", "email1", String.valueOf(OffsetDateTime.now()));
+//        Log.i(nazwaApki, "Wprowadzanie nowego użytkownika: " + uzytkownik1.pobierzPelneDane());
+//        bazaDanychRef.collection("uzytkownicy").add(uzytkownik1);
 
-        Log.i(nazwaApki, "Wprowadzono nowego użytkownika do tabeli: " + uzytkownik1.pobierzPelneDane());
+        // Pobieranie wszystkich rekordów z tabeli uzytkownicy
+        Log.i(nazwaApki, "Pobieranie użytkowników z bazy");
+        bazaDanychRef.collection("uzytkownicy").get().addOnSuccessListener(documentSnapshots -> {
+            if (documentSnapshots.isEmpty()) {
+                Log.i(nazwaApki, "Nie znaleziono użytkowników");
+                return;
+            } else {
+                Log.i(nazwaApki, "Pobrano użytkowników z bazy (" + documentSnapshots.size() + "):");
+
+                ArrayList<Uzytkownik> uzytkownicy = new ArrayList<Uzytkownik>();
+                ArrayList<Uzytkownik> types = (ArrayList<Uzytkownik>) documentSnapshots.toObjects(Uzytkownik.class);
+                uzytkownicy.addAll(types);
+
+                for (Uzytkownik uzytkownik : uzytkownicy) {
+                    Log.i(nazwaApki, "Użytkownik: " + uzytkownik.pobierzPelneDane());
+                }
+
+            }
+        });
     }
 
     // metoda prosząca użytkownika o zezwolenia na uprawnienia
@@ -120,7 +134,8 @@ public class GlownaAktywnosc extends Activity {
     // -------------- ZAPYTANIE O POZWOLENIA OD UŻYTKOWNIKA --------------
     @Override
     // metoda wywoływana jeśli użytkownik podjął decyzję czy nadać uprawnienia czy nie
-    public void onRequestPermissionsResult(int kodUzyskania, String[] uprawnienia, int[] rezultatyNadania) {
+    public void onRequestPermissionsResult(int kodUzyskania, String[] uprawnienia,
+                                           int[] rezultatyNadania) {
         ArrayList<String> uprawnieniaDoUzyskania = new ArrayList<>();
 
         // dodanie wszystkich uprawnień do listy
