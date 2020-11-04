@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import krolkozak.project.app.R;
 import krolkozak.project.app.bazadanych.Uzytkownik;
+import krolkozak.project.app.tworzenietrasy.Mapa;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 

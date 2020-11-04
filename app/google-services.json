@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1031851269532-mllim21ahsstc50lh2r2hv0teej6otk0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krolkozak.project.app",
+            "certificate_hash": "905d087e813adcb14d69b5593b80e7bfdf22cc7a"
+          }
+        },
+        {
           "client_id": "1031851269532-56plrcllrfsu0iannvca1trbqvhrpmvn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

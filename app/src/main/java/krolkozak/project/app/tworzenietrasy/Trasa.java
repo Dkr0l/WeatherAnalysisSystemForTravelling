@@ -235,11 +235,10 @@ public class Trasa {
     @RequiresApi(api = Build.VERSION_CODES.O)
     // metoda, która doda punkty pośrednie na trasie z obliczonym odstępem
     public void dodajPunktyPosrednie(JSONObject trasa, int odstep, Context kontekst) {
-        int sumaCzasu = 0;
-        long sekundy = 0;
-
         // -------------- PRZEJŚCIE PO CAŁEJ TRASIE I DODANIE PUNKTÓW POGODOWYCH Z OBLICZONYM ODSTĘPEM --------------
         try {
+            int sumaCzasu = 0;
+            long sekundy = 0;
             // pobranie punktów manewrowych
             JSONArray obiektLegsJSON = trasa.getJSONArray("legs");
             JSONObject manewr;
@@ -248,22 +247,30 @@ public class Trasa {
             for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
                 JSONArray manewryJSON=obiektLegsJSON.getJSONObject(numOdcinka).getJSONArray("maneuvers");
                 int dodanePunkty = 0;
-
+                //int manewrowOdOstatniegoPunktu=0;
                 // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
                 for (int i = 0; i < manewryJSON.length(); i++) {
-                    // pobranie czasu z punktu manewrowego
+                    //manewrowOdOstatniegoPunktu++;
                     manewr = (JSONObject) manewryJSON.get(i);
+                    // pobranie czasu z punktu manewrowego
                     sumaCzasu += manewr.getInt("time");
 
                     // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie
-                    if (sumaCzasu > odstep) {
-                        if (dodanePunkty > 0) koordynatyPoprzednieJSON = koordynatyJSON;
+                    if (sumaCzasu > (odstep *0.95)) {
+                        if (dodanePunkty > 0) {koordynatyPoprzednieJSON = koordynatyJSON;}
                         koordynatyJSON = manewr.getJSONObject("startPoint");
-                        if (sumaCzasu >= 1.5 * odstep && dodanePunkty > 0) {
+                        if(sumaCzasu>odstep &&dodanePunkty>0){
+                            double latSr=(koordynatyPoprzednieJSON.getDouble("lat")+koordynatyJSON.getDouble("lat"))/2;
+                            double lngSr=(koordynatyPoprzednieJSON.getDouble("lng")+koordynatyJSON.getDouble("lng"))/2;
+                            dodajPunktPogodowy(latSr, lngSr, czasWyjazdu.plusSeconds(sekundy+(int)(0.5*sumaCzasu)), kontekst);
+                        }else if (sumaCzasu > (2 * odstep) && dodanePunkty > 0) {
                             dodajPunktyWLiniProstej(koordynatyPoprzednieJSON.getDouble("lat"), koordynatyJSON.getDouble("lat"), koordynatyPoprzednieJSON.getDouble("lng"), koordynatyJSON.getDouble("lng"), odstep, sumaCzasu, sekundy, kontekst);
                         }
+
                         sekundy += sumaCzasu;
+                        //Log.i(nazwaApki, " minuty od ostatniego punktu: "+sumaCzasu/60+" manewrow od ostatniego punktu: "+manewrowOdOstatniegoPunktu);
                         sumaCzasu = 0;
+                        //manewrowOdOstatniegoPunktu=0;
                         dodanePunkty++;
                         dodajPunktPogodowy(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng"), czasWyjazdu.plusSeconds(sekundy), kontekst);
                     }
@@ -278,7 +285,7 @@ public class Trasa {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void dodajPunktyWLiniProstej(double szerokosc1, double szerokosc2, double dlugosc1, double dlugosc2, int odstep, int sumaCzasu, long sekundy, Context kontekst) throws IOException {
-        int doUzupelnienia= (int) Math.floor(sumaCzasu/odstep);
+        int doUzupelnienia= sumaCzasu /(odstep);
         double wektorLat=(szerokosc2-szerokosc1)/(doUzupelnienia+1);
         double wektorLng=(dlugosc2-dlugosc1)/(doUzupelnienia+1);
         double latPosrednie=szerokosc1;
@@ -286,7 +293,7 @@ public class Trasa {
         for(int k=1; k<=doUzupelnienia; k++){
             latPosrednie+=wektorLat;
             lngPosrednie+=wektorLng;
-            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+(int)(k*odstep*0.9)), kontekst);
+            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+ (k/doUzupelnienia*odstep)), kontekst);
         }
     }
 
