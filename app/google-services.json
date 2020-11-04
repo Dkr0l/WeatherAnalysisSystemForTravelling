@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1031851269532-56plrcllrfsu0iannvca1trbqvhrpmvn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krolkozak.project.app",
+            "certificate_hash": "2215e9e10dd29a3ac4b12b8c5978032ae636ed59"
+          }
+        },
+        {
+          "client_id": "1031851269532-3chsnh4ubqu7uq7psv06p7vppdpo39ib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krolkozak.project.app",
+            "certificate_hash": "8791e63b651a4ab8f666c8ced8ba1e97ca06abdd"
+          }
+        },
+        {
           "client_id": "1031851269532-rg4l251v1m1e8q7nogt1egsjai29ccer.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1031851269532-rg4l251v1m1e8q7nogt1egsjai29ccer.apps.googleusercontent.com",
+              "client_id": "1031851269532-e3ib4ndg3asfuhpikngvpqekbjtsgoir.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
