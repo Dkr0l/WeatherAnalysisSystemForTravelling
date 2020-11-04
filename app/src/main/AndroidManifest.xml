@@ -24,13 +24,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".tworzenietrasy.TworzenieTrasy" />
-        <activity android:name=".tworzenietrasy.Mapa">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".tworzenietrasy.popup.PopupCzas"
             android:theme="@style/AppTheme.PopupTheme" />
