@@ -42,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:paddingHorizontal="75dp"
                 android:paddingVertical="20dp"
-                android:text="ZALOGUJ SIĘ"
+                android:text="ZALOGUJ"
                 tools:ignore="MissingConstraints" />
         </TableRow>
 

@@ -45,7 +45,7 @@ public class TworzenieTrasy extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tworzenie_trasy);
 
-        Log.i(nazwaApki, "Test");
+        Log.i(nazwaApki, "Tworzenie trasy");
 
         // -------------- INICJALIZACJA ZMIENNYCH --------------
         // przypisanie referencji
