@@ -22,13 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
+import java.time.OffsetDateTime;
 
 import krolkozak.project.app.R;
 import krolkozak.project.app.bazadanych.Uzytkownik;
-import krolkozak.project.app.tworzenietrasy.Mapa;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
@@ -128,7 +128,8 @@ public class Logowanie extends Activity {
                 if (zadanie.isSuccessful()) {
                     // Pomyślne logowanie z danymi uwierzytelniającymi
                     Log.i(nazwaApki, "Pomyślne logowanie z danymi uwierzytelniającymi");
-                    FirebaseUser uzytkownikFirebase = uwierzytelnianieFirebase.getCurrentUser();
+
+                    dodajUzytkownikaDoBazy();
 
                     // Przejście do ekranu menu
                     Intent intent = new Intent(getApplicationContext(), Menu.class);
@@ -141,34 +142,40 @@ public class Logowanie extends Activity {
         });
     }
 
-    // Metoda testująca połączenie z bazą danych
-    private void testujBazeDanych() {
-        // TESTOWANIE BAZY DANYCH -----------------------------------------------
-        // Odnośnik do bazy danych
+    // Metoda wprowadząjącego nowego użytkownika do tabeli uzytkownicy
+    private void dodajUzytkownikaDoBazy() {
+        // Pobranie instancji bazy danych
         FirebaseFirestore bazaDanychRef = FirebaseFirestore.getInstance();
 
-        // Wprowadzenie nowego użytkownika do tabeli uzytkownicy
-//        Uzytkownik uzytkownik1 = new Uzytkownik("id1", "login1", "haslo1", "email1", String.valueOf(OffsetDateTime.now()));
-//        Log.i(nazwaApki, "Wprowadzanie nowego użytkownika: " + uzytkownik1.pobierzPelneDane());
-//        bazaDanychRef.collection("uzytkownicy").add(uzytkownik1);
+        // Utworzenie obiektu użytkownika do wprowadzenia na podstawie informacji z zalogowanego konta google
+        FirebaseUser uzytkownikFirebase = uwierzytelnianieFirebase.getCurrentUser();
+        final String uzytkownikId = uzytkownikFirebase.getUid();
+        final String uzytkownikLogin = uzytkownikFirebase.getDisplayName();
+        final String uzytkownikEmail = uzytkownikFirebase.getEmail();
+        final String uzytkownikDataUtworzenia = String.valueOf(OffsetDateTime.now());
+        Uzytkownik uzytkownikDoWprowadzenia = new Uzytkownik(uzytkownikId, uzytkownikLogin, uzytkownikEmail, uzytkownikDataUtworzenia);
 
-        // Pobieranie wszystkich rekordów z tabeli uzytkownicy
-        Log.i(nazwaApki, "Pobieranie użytkowników z bazy");
-        bazaDanychRef.collection("uzytkownicy").get().addOnSuccessListener(documentSnapshots -> {
-            if (documentSnapshots.isEmpty()) {
-                Log.i(nazwaApki, "Nie znaleziono użytkowników");
-                return;
-            } else {
-                Log.i(nazwaApki, "Pobrano użytkowników z bazy (" + documentSnapshots.size() + "):");
+        Log.i(nazwaApki, "Wprowadzanie nowego użytkownika: " + uzytkownikDoWprowadzenia.pobierzPelneDane());
 
-                ArrayList<Uzytkownik> uzytkownicy = new ArrayList<Uzytkownik>();
-                ArrayList<Uzytkownik> types = (ArrayList<Uzytkownik>) documentSnapshots.toObjects(Uzytkownik.class);
-                uzytkownicy.addAll(types);
+        // Wywołanie zapytania bazy o dokument z id użytkownika - jeśli nie zostanie zwrócony żadny dokument to nastąpi wprowadzenie użytkownika do tabeli
+        bazaDanychRef.collection("uzytkownicy").document(uzytkownikId).get().addOnCompleteListener(new OnCompleteListener() {
+            public void onComplete(@NonNull Task zadanie) {
+                if (zadanie.isSuccessful()) {
+                    // Pobranie migawki dokumentu jeśli udało się wykonać zapytanie
+                    DocumentSnapshot migawkaDokumentu = (DocumentSnapshot) zadanie.getResult();
+                    Log.i(nazwaApki, "Pobrano dokument: " + migawkaDokumentu);
 
-                for (Uzytkownik uzytkownik : uzytkownicy) {
-                    Log.i(nazwaApki, "Użytkownik: " + uzytkownik.pobierzPelneDane());
+                    // Jeśli dokument nie jest pusty = wprowadź użytkownika do tabeli
+                    if (migawkaDokumentu.getData() == null) {
+                        bazaDanychRef.collection("uzytkownicy").document(uzytkownikId).set(uzytkownikDoWprowadzenia);
+
+                        Log.i(nazwaApki, "Wprowadzono użytkownika do bazy");
+                    } else {
+                        Log.i(nazwaApki, "Użytkownik istnieje już w bazie");
+                    }
+                } else {
+                    Log.i(nazwaApki, "Błąd pobierania dokumentu: " + zadanie.getException().getMessage());
                 }
-
             }
         });
     }
