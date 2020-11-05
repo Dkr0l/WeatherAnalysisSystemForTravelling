@@ -133,14 +133,14 @@ public class Trasa {
             // -------------- ZAPYTANIE O TRASĘ (mapquestapi.com) --------------
             // złączenie adresu url w jedną zmienną, która zawiera podstawową domenę zapytań API,
             // klucz, jednostki w kilometrach oraz koordynaty początkowe i końcowe trasy
-            StringBuilder url = new StringBuilder("http://www.mapquestapi.com/directions/v2/optimizedroute?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&unit=k&json={\"locations\":[\"" + koordynaty1 + "\",");
+            StringBuilder url = new StringBuilder("http://www.mapquestapi.com/directions/v2/optimizedroute?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&json={\"locations\":[\"" + koordynaty1 + "\",");
             if(przystanki.size()>0){
                 for(int numPrzystanku=0; numPrzystanku<przystanki.size();numPrzystanku++){
                     PunkPostoju przystanek = przystanki.get(numPrzystanku);
                     url.append("\"").append(przystanek.getSzerGeog()).append(",").append(przystanek.getDlugGeog()).append("\",");
                 }
             }
-            url.append("\"").append(koordynaty2).append("\"]}&routeType=").append(transport_doURL);
+            url.append("\"").append(koordynaty2).append("\"], options:{routeType:").append(transport_doURL).append(",unit:k}}");
             Log.i(nazwaApki, "mapa url: " + url);
             // zapisanie wyniku zapytania do ciągu buforu
             StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url.toString());
