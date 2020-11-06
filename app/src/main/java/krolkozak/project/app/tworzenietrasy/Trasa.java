@@ -297,6 +297,78 @@ public class Trasa {
         }
     }
 
+    private void dodajIkony(Marker znacznik, Double wiatr, Double opady, String kodPogodowy, Context kontekst){
+            switch (kodPogodowy){
+                case "freezing_rain_heavy":
+                case "freezing_rain":
+                case "freezing_rain_light":
+                case "freezing_drizzle":
+                case "ice_pellets_heavy":
+                case "ice_pellets":
+                case "ice_pellets_light":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.blizzard));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.blizzard));
+                    break;
+                case "snow_heavy":
+                case "snow":
+                case "snow_light":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.snow));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.snow));
+                    break;
+                case "flurries":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.winter));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.winter));
+                    break;
+                case "tstorm":
+                    if(wiatr<=10 && opady<=1) {
+                        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.thunderstorm));
+                        znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.thunderstorm));
+                    }else if(opady>1){
+                        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.storm2));
+                        znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.storm2));
+                    }else if(wiatr>10){
+                        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.storm));
+                        znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.storm));
+                    }
+                    break;
+                case "rain_heavy":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.rain2));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.rain2));
+                    break;
+                case "rain":
+                case "rain_light":
+                case "drizzle":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.rain3));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.rain3));
+                    break;
+                case "fog_light":
+                case "fog":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.fog));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.fog));
+                    break;
+                case "cloudy":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.clouds_heavy));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.clouds_heavy));
+                    break;
+                case "mostly_cloudy":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.mostly_cloudy));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.mostly_cloudy));
+                    break;
+                case "partly_cloudy":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.cloudy));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.cloudy));
+                    break;
+                case "mostly_clear":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.cloud));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.cloud));
+                    break;
+                case "clear":
+                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
+                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
+                    break;
+        }
+    }
+
     // -------------- DODANIE PUNKTU Z POGODA NA MAPIE --------------
     @RequiresApi(api = Build.VERSION_CODES.O)
     // metoda dodająca znacznik na mapie z informacją o pogodzie, miejscu i czasie, na podstawie
@@ -310,16 +382,16 @@ public class Trasa {
         Marker znacznik = new Marker(mapa);
         znacznik.setPosition(new GeoPoint(szerGeog, dlugGeog));
         znacznik.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        znacznik.setIcon(kontekst.getApplicationContext().getResources().getDrawable(R.drawable.weather_marker));
-        znacznik.setImage(kontekst.getApplicationContext().getResources().getDrawable(R.drawable.weather_icon));
 
         // -------------- SFORMATOWANIE DANYCH O POGODZIE I WYSWIETLENIE --------------
         // sformatowanie parametrów pogody oraz wyświetlenie ich jako tytuł
         String tytulZnacznika = "Wystąpił błąd.";
         if (danePogodowe != null) {
-            String temperatureText = "Temperatura: " + danePogodowe.get(0) + pogoda.jednostkaTemp;
-            String precipitationText = "Opady: " + danePogodowe.get(1) + pogoda.jednostkaOpad;
-            tytulZnacznika = temperatureText + "\n" + precipitationText;
+            dodajIkony(znacznik, Double.parseDouble((String)danePogodowe.get(2)), Double.parseDouble((String)danePogodowe.get(1)), (String)danePogodowe.get(3), kontekst);
+            String temperaturaTekst = "Temperatura: " + danePogodowe.get(0) + pogoda.jednostkaTemp;
+            String opadyTekst = "Opady: " + danePogodowe.get(1) + pogoda.jednostkaOpad;
+            String porywyWiatryTekst="Porywy wiatru: "+danePogodowe.get(2)+pogoda.jednostkaPorywyWiatru;
+            tytulZnacznika = temperaturaTekst + "\n" + opadyTekst+"\n"+porywyWiatryTekst;
         }
         znacznik.setTitle(tytulZnacznika);
 
