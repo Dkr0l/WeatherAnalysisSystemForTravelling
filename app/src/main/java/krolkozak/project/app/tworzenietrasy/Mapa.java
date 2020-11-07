@@ -5,6 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -17,6 +22,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.ArrayList;
 
@@ -77,12 +84,36 @@ public class Mapa extends Activity {
 
         // wywołanie metody, która ustawia początkowe parametry mapy oraz wyświetla na ekranie
         trasa.zainicjujMape();
+        darkMode();
 
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
         znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
         znajdzTrasePrzycisk.setEnabled(false);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void darkMode() {
+        //DARK MODE
+        TilesOverlay plytkiMapy=trasa.mapa.getOverlayManager().getTilesOverlay();
+        /*  4x5 matrix for transforming the color and alpha components of a Bitmap. The matrix can be passed as single array, and is treated as follows:
+          [ a, b, c, d, e,
+            f, g, h, i, j,
+            k, l, m, n, o,
+            p, q, r, s, t ]
+        When applied to a color [R, G, B, A], the resulting color is computed as:
+           R’ = a*R + b*G + c*B + d*A + e;
+           G’ = f*R + g*G + h*B + i*A + j;
+           B’ = k*R + l*G + m*B + n*A + o;
+           A’ = p*R + q*G + r*B + s*A + t;      */
+        float[] matrycaKolorow={
+                0, -1, -1, 0, 450,//Czerwony
+                -1, 0, -1, 0, 450,//Zielony
+                -1, -1, 0, 0, 450,//Niebieski
+                0, 0, 0, 1, 0 //alpha (nie tykać!!)
+        };
+        plytkiMapy.setColorFilter(new ColorMatrixColorFilter(new ColorMatrix(matrycaKolorow)));
     }
 
     // metoda prosząca użytkownika o zezwolenia na uprawnienia

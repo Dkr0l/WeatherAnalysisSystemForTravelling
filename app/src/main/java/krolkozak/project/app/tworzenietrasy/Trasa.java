@@ -74,7 +74,6 @@ public class Trasa {
         mapa.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         // włączenie obsługi wielokrotnego dotyku (mutli-touch)
         mapa.setMultiTouchControls(true);
-
         // -------------- CZYSZCZENIE MAPY --------------
         // wywołanie metody czyszcząca mapę (punkty i trasa)
         wyczyscMape();
