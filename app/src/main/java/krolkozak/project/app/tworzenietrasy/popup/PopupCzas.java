@@ -15,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.tworzenietrasy.TworzenieTrasy;
 
 public class PopupCzas extends Activity {
     private DatePicker wyborDaty;
@@ -47,6 +48,9 @@ public class PopupCzas extends Activity {
             dataWybrana = true;
 
             czasWyjazdu = OffsetDateTime.of(rok, miesiac, dzien, godzina, minuta, 0, 0, ZoneOffset.of(OffsetDateTime.now().getOffset().getId()));
+
+            TworzenieTrasy.aktualnaTrasaTekst.setCzasWyjazduTekst(String.valueOf(czasWyjazdu.toLocalDateTime()));
+            TworzenieTrasy.zaktualiujTwojaTrasaTekst();
 
             Intent intent = new Intent();
             intent.putExtra("czasWyjazdu", czasWyjazdu);

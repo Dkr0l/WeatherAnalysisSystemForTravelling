@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
@@ -19,6 +21,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.pomocnicze.AktualnaTrasaTekst;
 import krolkozak.project.app.tworzenietrasy.popup.PopupCzas;
 import krolkozak.project.app.tworzenietrasy.popup.PopupPrzystanek;
 
@@ -38,6 +41,9 @@ public class TworzenieTrasy extends Activity {
     protected static InputMethodManager inputMethodManager;
     // menadżer lokalizacji
     protected static LocationManager manadzerLokalizacji;
+    // tekst aktualnej trasy
+    protected static TextView twojaTrasaTekst;
+    public static AktualnaTrasaTekst aktualnaTrasaTekst;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -62,10 +68,15 @@ public class TworzenieTrasy extends Activity {
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         manadzerLokalizacji = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        // przypisanie widoku wyświetlającego tekst aktualnych danych trasy do zmiennej i dodanie paska przewijania
+        twojaTrasaTekst = (TextView) findViewById(R.id.twojaTrasaTekst);
+        twojaTrasaTekst.setMovementMethod(new ScrollingMovementMethod());
+        aktualnaTrasaTekst = new AktualnaTrasaTekst();
+
         // utworzenie obkietu klasy Autouzupelnianie
         //autouzupelnianie = new Autouzupelnianie();
-        Autouzupelnianie poczAuto = new Autouzupelnianie(poczatekAutouzupelnianie, wyczyscPoczatekPrzycisk);
-        Autouzupelnianie koniecAuto = new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk);
+        Autouzupelnianie poczAuto = new Autouzupelnianie(poczatekAutouzupelnianie, wyczyscPoczatekPrzycisk, 1);
+        Autouzupelnianie koniecAuto = new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk, 2);
 
         // przypisanie okna wybierania czasu wyjazdu do przycisku
         ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
@@ -121,5 +132,9 @@ public class TworzenieTrasy extends Activity {
                     }
                 }
         }
+    }
+
+    public static void zaktualiujTwojaTrasaTekst() {
+        twojaTrasaTekst.setText(aktualnaTrasaTekst.pobierzPelnyTekstTrasy());
     }
 }

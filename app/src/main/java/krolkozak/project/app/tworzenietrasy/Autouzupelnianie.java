@@ -46,7 +46,7 @@ public class Autouzupelnianie {
     private JSONArray miejsca;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Autouzupelnianie(AutoCompleteTextView poleAutouzupelnianie, Button wyczyscPolePrzycisk) {
+    public Autouzupelnianie(AutoCompleteTextView poleAutouzupelnianie, Button wyczyscPolePrzycisk, int idPola) {
         // wywołanie metody która pobierze lokalizację GPS i uzupełni pierwsze pole tekstowe
         this.pobierzLokalizacjeGPS();
 
@@ -145,12 +145,20 @@ public class Autouzupelnianie {
                 podpowiedziJSON = PodpowiedziJSON.getJSONArray("geonames").getJSONObject(pos);
                 pomocSzerGeog = Double.parseDouble(podpowiedziJSON.getString("lat"));
                 pomocDlugGeog = Double.parseDouble(podpowiedziJSON.getString("lng"));
-                nazwaMiejsca=podpowiedziJSON.getString("name");
+                nazwaMiejsca = podpowiedziJSON.getString("name");
 
                 //ukryj klawiaturę
                 TworzenieTrasy.inputMethodManager.hideSoftInputFromWindow(parent.getApplicationWindowToken(), 0);
 
                 wlaczPrzycisk();
+
+                if (idPola == 1) {
+                    TworzenieTrasy.aktualnaTrasaTekst.setPoczątekTrasyTekst(nazwaMiejsca);
+                    TworzenieTrasy.zaktualiujTwojaTrasaTekst();
+                } else if (idPola == 2) {
+                    TworzenieTrasy.aktualnaTrasaTekst.setKoniecTrasyTekst(nazwaMiejsca);
+                    TworzenieTrasy.zaktualiujTwojaTrasaTekst();
+                }
             } catch (JSONException e) {
                 // jeśli nie udało się pobrać podpowiedzi aplikacji wyrzuci wyjątek
                 e.printStackTrace();
@@ -160,6 +168,14 @@ public class Autouzupelnianie {
         // dodanie nasłuchiwacza kliknięcia w przycisk "WYCZYŚĆ" - wyczyszczenie pierwszego pola tekstowego
         wyczyscPolePrzycisk.setOnClickListener(v -> {
             Log.i(nazwaApki, "Wyczyszczono pierwsze pole tekstowe!");
+
+            if (idPola == 1) {
+                TworzenieTrasy.aktualnaTrasaTekst.setPoczątekTrasyTekst("");
+                TworzenieTrasy.zaktualiujTwojaTrasaTekst();
+            } else if (idPola == 2) {
+                TworzenieTrasy.aktualnaTrasaTekst.setKoniecTrasyTekst("");
+                TworzenieTrasy.zaktualiujTwojaTrasaTekst();
+            }
 
             // ustawia zawartość pierwszego pola tekstowego na pustą
             poleAutouzupelnianie.setText("");
@@ -183,7 +199,7 @@ public class Autouzupelnianie {
     // metoda, która włączy przycisk do wyszykania trasy
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void wlaczPrzycisk() {
-        Log.i(nazwaApki, nazwaMiejsca+": " + pomocSzerGeog + " " + pomocDlugGeog);
+        Log.i(nazwaApki, nazwaMiejsca + ": " + pomocSzerGeog + " " + pomocDlugGeog);
         Log.i(nazwaApki, "WŁĄCZONO PRZYCISK");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setText("ZATWIERDŹ TRASĘ");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(true);
