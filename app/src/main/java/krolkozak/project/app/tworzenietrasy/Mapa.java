@@ -84,8 +84,9 @@ public class Mapa extends Activity {
 
         // wywołanie metody, która ustawia początkowe parametry mapy oraz wyświetla na ekranie
         trasa.zainicjujMape();
-        darkMode();
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            darkMode();
+        }
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
