@@ -1,7 +1,7 @@
 package krolkozak.project.app.bazadanych;
 
 public class Uzytkownik {
-    String id, login, email, data_utworzenia;
+    private String id, login, email, data_utworzenia;
 
     public Uzytkownik() {
     }
