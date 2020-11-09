@@ -133,9 +133,11 @@ public class Trasa {
             // złączenie adresu url w jedną zmienną, która zawiera podstawową domenę zapytań API,
             // klucz, jednostki w kilometrach oraz koordynaty początkowe i końcowe trasy
             StringBuilder url = new StringBuilder("http://www.mapquestapi.com/directions/v2/optimizedroute?key=ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi&json={\"locations\":[\"" + koordynaty1 + "\",");
+            int czasPostojuMinutySuma=0;
             if(przystanki.size()>0){
                 for(int numPrzystanku=0; numPrzystanku<przystanki.size();numPrzystanku++){
                     PunkPostoju przystanek = przystanki.get(numPrzystanku);
+                    czasPostojuMinutySuma+=przystanek.getCzasPostojuMinuty();
                     url.append("\"").append(przystanek.getSzerGeog()).append(",").append(przystanek.getDlugGeog()).append("\",");
                 }
             }
@@ -169,7 +171,10 @@ public class Trasa {
             // -------------- SFORMATOWANY CZAS PRZYJAZDU NA MIEJSCE --------------
             // sformatowanie czasu przyjazdu na miejsce (obecny czas dodać pobrany czas trasy w sekundach)
             // czas dotarcia do celu
-            czasDotarcia = czasWyjazdu.plusSeconds(Long.parseLong(trasaJSON.getJSONArray("legs").getJSONObject(0).getString("time")));
+            String[] wartosciCzasu=trasaJSON.getString("formattedTime").split(":");
+            int sekundyDoCelu=Integer.parseInt(wartosciCzasu[0])*3600+Integer.parseInt(wartosciCzasu[1])*60+Integer.parseInt(wartosciCzasu[0]);
+
+            czasDotarcia = czasWyjazdu.plusSeconds(sekundyDoCelu+(czasPostojuMinutySuma*60));
         } catch (IOException | JSONException e) {
             // jeśli nie udało się pobrać trasy - aplikacja wyrzyci wyjątek
             Log.i(nazwaApki, "Blad trasy: " + e.getMessage());
@@ -246,13 +251,9 @@ public class Trasa {
             for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
                 JSONArray manewryJSON=obiektLegsJSON.getJSONObject(numOdcinka).getJSONArray("maneuvers");
                 int dodanePunkty = 0;
-                //int manewrowOdOstatniegoPunktu=0;
                 // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
                 for (int i = 0; i < manewryJSON.length(); i++) {
-                    //manewrowOdOstatniegoPunktu++;
                     manewr = (JSONObject) manewryJSON.get(i);
-                    // pobranie czasu z punktu manewrowego
-                    sumaCzasu += manewr.getInt("time");
 
                     // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie
                     if (sumaCzasu > (odstep *0.95)) {
@@ -265,17 +266,19 @@ public class Trasa {
                         }else if (sumaCzasu > (2 * odstep) && dodanePunkty > 0) {
                             dodajPunktyWLiniProstej(koordynatyPoprzednieJSON.getDouble("lat"), koordynatyJSON.getDouble("lat"), koordynatyPoprzednieJSON.getDouble("lng"), koordynatyJSON.getDouble("lng"), odstep, sumaCzasu, sekundy, kontekst);
                         }
-
                         sekundy += sumaCzasu;
-                        //Log.i(nazwaApki, " minuty od ostatniego punktu: "+sumaCzasu/60+" manewrow od ostatniego punktu: "+manewrowOdOstatniegoPunktu);
                         sumaCzasu = 0;
-                        //manewrowOdOstatniegoPunktu=0;
                         dodanePunkty++;
                         dodajPunktPogodowy(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng"), czasWyjazdu.plusSeconds(sekundy), kontekst);
                     }
+                    // pobranie czasu z punktu manewrowego
+                    sumaCzasu += manewr.getInt("time");
+                }
+                Log.i(nazwaApki, " numer odcinka: " + numOdcinka + " na " + (obiektLegsJSON.length()-1));
+                if(numOdcinka!=obiektLegsJSON.length()-1){
+                    sekundy+=(przystanki.get(numOdcinka).getCzasPostojuMinuty())*60;
                 }
             }
-            JSONObject cel = trasa.getJSONObject("boundingBox").getJSONObject("ul");
         } catch (JSONException | IOException e) {
             // jeśli nie uda siędodać punktu pogodowego lub pobrać trasy - zostanie wyrzucony wyjątek
             Log.i(nazwaApki, "Blad punktow posrednich: " + e.getMessage());
@@ -284,7 +287,7 @@ public class Trasa {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void dodajPunktyWLiniProstej(double szerokosc1, double szerokosc2, double dlugosc1, double dlugosc2, int odstep, int sumaCzasu, long sekundy, Context kontekst) throws IOException {
-        int doUzupelnienia= sumaCzasu /(odstep);
+        int doUzupelnienia= sumaCzasu /odstep;
         double wektorLat=(szerokosc2-szerokosc1)/(doUzupelnienia+1);
         double wektorLng=(dlugosc2-dlugosc1)/(doUzupelnienia+1);
         double latPosrednie=szerokosc1;
@@ -292,7 +295,7 @@ public class Trasa {
         for(int k=1; k<=doUzupelnienia; k++){
             latPosrednie+=wektorLat;
             lngPosrednie+=wektorLng;
-            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+ (k/doUzupelnienia*odstep)), kontekst);
+            dodajPunktPogodowy(latPosrednie, lngPosrednie,czasWyjazdu.plusSeconds(sekundy+ (k*sumaCzasu/(doUzupelnienia+1))), kontekst);
         }
     }
 
@@ -414,7 +417,7 @@ public class Trasa {
             znacznik.setSubDescription(nazwaLokacji + "<br>" + pelnaData);
         }
         catch (IndexOutOfBoundsException e){
-
+            Log.i(nazwaApki, "Błędny podpis punktu pogodowego: " + e.getMessage());
         }
 
         // -------------- DODANIE ZNACZNIKA NA MAPE --------------
