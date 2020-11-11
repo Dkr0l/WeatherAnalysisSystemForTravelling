@@ -1,22 +1,25 @@
 package krolkozak.project.app.bazadanych;
 
-import org.json.JSONArray;
-
-
 public class Historia {
     private String id_uzytkownika;
-    private JSONArray miejscaPogodowe;
+    private String lokalizacja_poczatkowa;
+    private String lokalizacja_koncowa;
+    private String czas_wyjazdu;
+    private String miejsca_pogodowe;
 
     public Historia() {
     }
 
-    public Historia(String id_uzytkownika, JSONArray miejscaPogodowe) {
+    public Historia(String id_uzytkownika, String lokalizacja_poczatkowa, String lokalizacja_koncowa, String czas_wyjazdu, String miejsca_pogodowe) {
         this.id_uzytkownika = id_uzytkownika;
-        this.miejscaPogodowe = miejscaPogodowe;
+        this.lokalizacja_poczatkowa = lokalizacja_poczatkowa;
+        this.lokalizacja_koncowa = lokalizacja_koncowa;
+        this.czas_wyjazdu = czas_wyjazdu;
+        this.miejsca_pogodowe = miejsca_pogodowe;
     }
 
     public String pobierzObiekt() {
-        return "Historia: Id: " + id_uzytkownika + ", miejsca pogodowe: " + miejscaPogodowe.toString();
+        return "id_uzytkownika: " + id_uzytkownika + ", lokalizacja_poczatkowa: " + lokalizacja_poczatkowa + ", lokalizacja_koncowa: " + lokalizacja_koncowa + ", czas_wyjazdu: " + czas_wyjazdu + ", miejsca_pogodowe: " + miejsca_pogodowe;
     }
 
     public String getId_uzytkownika() {
@@ -27,29 +30,35 @@ public class Historia {
         this.id_uzytkownika = id_uzytkownika;
     }
 
-    public JSONArray getMiejscaPogodowe() {
-        return miejscaPogodowe;
+    public String getLokalizacja_poczatkowa() {
+        return lokalizacja_poczatkowa;
     }
 
-    public void setMiejscaPogodowe(JSONArray miejscaPogodowe) {
-        this.miejscaPogodowe = miejscaPogodowe;
+    public void setLokalizacja_poczatkowa(String lokalizacja_poczatkowa) {
+        this.lokalizacja_poczatkowa = lokalizacja_poczatkowa;
+    }
+
+    public String getLokalizacja_koncowa() {
+        return lokalizacja_koncowa;
+    }
+
+    public void setLokalizacja_koncowa(String lokalizacja_koncowa) {
+        this.lokalizacja_koncowa = lokalizacja_koncowa;
+    }
+
+    public String getCzas_wyjazdu() {
+        return czas_wyjazdu;
+    }
+
+    public void setCzas_wyjazdu(String czas_wyjazdu) {
+        this.czas_wyjazdu = czas_wyjazdu;
+    }
+
+    public String getMiejsca_pogodowe() {
+        return miejsca_pogodowe;
+    }
+
+    public void setMiejsca_pogodowe(String miejsca_pogodowe) {
+        this.miejsca_pogodowe = miejsca_pogodowe;
     }
 }
-
-// private JSONArray miejscaPogodowe = new JSONArray();
-
-// Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid().toString(), miejscaPogodowe);
-// Log.i(nazwaApki, "Lista obiektów pogodowych: " + historia.pobierzObiekt());
-
-//JSONObject obiektPogodowy = new JSONObject();
-//JSONObject warunkiPogodowe = new JSONObject();
-
-// warunkiPogodowe.put("temperatura", temperaturaTekst);
-// warunkiPogodowe.put("opady", opadyTekst);
-// warunkiPogodowe.put("porywy_wiatru", porywyWiatryTekst);
-
-// obiektPogodowy.put("lokalizacja", nazwaLokacji);
-// obiektPogodowy.put("czas", pelnaData);
-
-// Log.i(nazwaApki, "Obiekt pogodowy: " + obiektPogodowy.toString());
-// miejscaPogodowe.put(obiektPogodowy);

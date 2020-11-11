@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONException;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -118,7 +120,11 @@ public class TworzenieTrasy extends Activity {
             Mapa.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
 
             // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
-            Mapa.trasa.odswiezMape(Mapa.kontekst);
+            try {
+                Mapa.trasa.odswiezMape(Mapa.kontekst);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             Mapa.trasa.przystanki.clear();
         });
     }

@@ -20,15 +20,16 @@ public class Menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Ustawienia.trybCiemnyAktywny()) {
+        if (Ustawienia.trybCiemnyAktywny()) {
             setContentView(R.layout.trybciemnymenu);
-        }else{
+        } else {
             setContentView(R.layout.menu);
         }
 
         // Jeżeli istnieje zalogowany użytkownik - wyświetl powitalny tekst z jego loginem
         menuTekstPowitalny = (TextView) findViewById(R.id.menuTekstPowitalny);
         FirebaseUser zalogowanyUzytkownik = FirebaseAuth.getInstance().getCurrentUser();
+
         if (zalogowanyUzytkownik != null) {
             menuTekstPowitalny.setText("Witaj " + zalogowanyUzytkownik.getDisplayName() + "!");
         } else {
@@ -44,14 +45,14 @@ public class Menu extends Activity {
 
         // Kliknięcie w przycisk "HISTORIA"
         ((Button) findViewById(R.id.historiaPrzycisk)).setOnClickListener(v -> {
-            // Przechodzi do ekranu mapy
-            Intent intent = new Intent(this, Mapa.class);
+            // Przechodzi do ekranu historii
+            Intent intent = new Intent(this, HistoriaEkran.class);
             startActivity(intent);
         });
 
         // Kliknięcie w przycisk "USTAWIENIA"
         ((Button) findViewById(R.id.ustawieniaPrzycisk)).setOnClickListener(v -> {
-            // Przechodzi do ekranu mapy
+            // Przechodzi do ekranu ustawień
             Intent intent = new Intent(this, Ustawienia.class);
             startActivity(intent);
         });
