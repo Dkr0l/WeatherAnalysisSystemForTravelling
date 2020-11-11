@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/darkModeBackground"
     tools:context=".ekrany.Menu"
     android:id="@+id/menuRoot">
 
@@ -25,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Witaj!"
+                android:textColor="@color/darkModePrimary"
                 android:textAlignment="center"
                 android:textSize="20dp" />
 
@@ -42,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="MENU"
+                android:textColor="@color/darkModePrimary"
                 android:textAlignment="center"
                 android:textSize="30dp" />
 
@@ -59,7 +62,10 @@
                 android:layout_height="match_parent"
                 android:paddingHorizontal="75dp"
                 android:paddingVertical="20dp"
+                android:layout_margin="5dp"
                 android:text="TWORZENIE TRASY"
+                android:background="@color/darkModeSecondary"
+                android:textColor="@color/darkModeText"
                 tools:ignore="MissingConstraints" />
         </TableRow>
 
@@ -75,7 +81,10 @@
                 android:layout_height="match_parent"
                 android:paddingHorizontal="75dp"
                 android:paddingVertical="20dp"
+                android:layout_margin="5dp"
                 android:text="HISTORIA"
+                android:background="@color/darkModeSecondary"
+                android:textColor="@color/darkModeText"
                 tools:ignore="MissingConstraints" />
         </TableRow>
 
@@ -91,7 +100,10 @@
                 android:layout_height="match_parent"
                 android:paddingHorizontal="75dp"
                 android:paddingVertical="20dp"
+                android:layout_margin="5dp"
                 android:text="USTAWIENIA"
+                android:background="@color/darkModeSecondary"
+                android:textColor="@color/darkModeText"
                 tools:ignore="MissingConstraints" />
         </TableRow>
 
@@ -107,7 +119,10 @@
                 android:layout_height="match_parent"
                 android:paddingHorizontal="75dp"
                 android:paddingVertical="20dp"
+                android:layout_margin="5dp"
                 android:text="WYLOGUJ"
+                android:background="@color/darkModeSecondary"
+                android:textColor="@color/darkModeText"
                 tools:ignore="MissingConstraints" />
         </TableRow>
 

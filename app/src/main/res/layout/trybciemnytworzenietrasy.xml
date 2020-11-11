@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkModeBackground"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/poczatekTekst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/darkModePrimary"
+        android:text="Miasto początkowe:" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/poczatekAuto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+
+        <Button
+            android:id="@+id/wyczyscPoczatekPrzycisk"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="WYCZYŚĆ"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/koniecTekst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/darkModePrimary"
+        android:text="Miasto końcowe:" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/koniecAuto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+
+        <Button
+            android:id="@+id/wyczyscKoniecPrzycisk"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="WYCZYŚĆ"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/wybor_transport_tekst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/darkModeSecondary"
+            android:text="Środek transportu: " />
+
+        <Spinner
+            android:id="@+id/wybor_srodka_transportu"
+            android:layout_width="wrap_content"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/czasPrzycisk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Wybierz czas wyjazdu"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+
+        <Button
+            android:id="@+id/dodajPunktPrzycisk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dodaj przystanek"
+            android:background="@color/darkModeSecondary"
+            android:textColor="@color/darkModeText" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/zatwierdzTrasePrzycisk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/darkModeSecondary"
+        android:textColor="@color/darkModeText"
+        android:text="ZATWIEDŹ TRASĘ" />
+
+    <TextView
+        android:id="@+id/twojaTrasaTekst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="99999"
+        android:textColor="@color/darkModePrimary"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

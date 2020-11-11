@@ -31,6 +31,7 @@
             android:name=".tworzenietrasy.popup.PopupPrzystanek"
             android:theme="@style/AppTheme.PopupTheme" />
         <activity android:name=".tworzenietrasy.Mapa" />
+        <activity android:name=".Ustawienia" />
     </application>
 
 </manifest>

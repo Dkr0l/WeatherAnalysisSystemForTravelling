@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/darkModeBackground"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -9,12 +10,16 @@
         android:id="@+id/stworzTrasePrzycisk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/darkModeSecondary"
+        android:textColor="@color/darkModeText"
         android:text="STWÓRZ TRASĘ" />
 
     <Button
         android:id="@+id/znajdzTrasePrzycisk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/darkModeSecondary"
+        android:textColor="@color/darkModeText"
         android:text="ZNAJDŹ TRASĘ" />
 
     <org.osmdroid.views.MapView

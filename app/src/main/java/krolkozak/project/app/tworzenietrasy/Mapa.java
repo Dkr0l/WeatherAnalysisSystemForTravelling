@@ -28,6 +28,7 @@ import org.osmdroid.views.overlay.TilesOverlay;
 import java.util.ArrayList;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Mapa extends Activity {
@@ -53,7 +54,11 @@ public class Mapa extends Activity {
         // wywołanie konstruktora klasy nadrzędnej z parametrem zapisanego stanu aplikacji i
         // ustawienie układu aplikacji (layout'u)
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mapa);
+        if(Ustawienia.trybCiemnyAktywny()) {
+            setContentView(R.layout.trybciemnymapa);
+        }else{
+            setContentView(R.layout.mapa);
+        }
 
         // -------------- POLITYKA I UPRAWNIENIA --------------
         // zezwolenie na wszystkie potrzebne uprawnienia
@@ -84,9 +89,8 @@ public class Mapa extends Activity {
 
         // wywołanie metody, która ustawia początkowe parametry mapy oraz wyświetla na ekranie
         trasa.zainicjujMape();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            darkMode();
-        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q && Ustawienia.trybCiemnyAktywny()) darkMode();
+
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
@@ -109,9 +113,9 @@ public class Mapa extends Activity {
            B’ = k*R + l*G + m*B + n*A + o;
            A’ = p*R + q*G + r*B + s*A + t;      */
         float[] matrycaKolorow={
-                0, -1, -1, 0, 450,//Czerwony
-                -1, 0, -1, 0, 450,//Zielony
-                -1, -1, 0, 0, 450,//Niebieski
+                0, -1, -1, 0, 460,//Czerwony
+                -1, 0, -1, 0, 460,//Zielony
+                -1, -1, 0, 0, 460,//Niebieski
                 0, 0, 0, 1, 0 //alpha (nie tykać!!)
         };
         plytkiMapy.setColorFilter(new ColorMatrixColorFilter(new ColorMatrix(matrycaKolorow)));

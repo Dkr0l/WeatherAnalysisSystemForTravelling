@@ -12,4 +12,8 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
+    <style name="AppTheme.DarkElementTheme">
+        <item name="android:textColor">@color/darkModeText</item>
+        <item name="android:background">@color/darkModeSecondary</item>
+    </style>
 </resources>

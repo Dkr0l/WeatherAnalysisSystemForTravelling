@@ -21,6 +21,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.pomocnicze.AktualnaTrasaTekst;
 import krolkozak.project.app.tworzenietrasy.popup.PopupCzas;
 import krolkozak.project.app.tworzenietrasy.popup.PopupPrzystanek;
@@ -49,7 +50,11 @@ public class TworzenieTrasy extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tworzenie_trasy);
+        if(Ustawienia.trybCiemnyAktywny()) {
+            setContentView(R.layout.trybciemnytworzenietrasy);
+        }else{
+            setContentView(R.layout.tworzenietrasy);
+        }
 
         Log.i(nazwaApki, "Tworzenie trasy");
 

@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.tworzenietrasy.Mapa;
 
 public class Menu extends Activity {
@@ -19,7 +20,11 @@ public class Menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);
+        if(Ustawienia.trybCiemnyAktywny()) {
+            setContentView(R.layout.trybciemnymenu);
+        }else{
+            setContentView(R.layout.menu);
+        }
 
         // Jeżeli istnieje zalogowany użytkownik - wyświetl powitalny tekst z jego loginem
         menuTekstPowitalny = (TextView) findViewById(R.id.menuTekstPowitalny);
@@ -41,6 +46,13 @@ public class Menu extends Activity {
         ((Button) findViewById(R.id.historiaPrzycisk)).setOnClickListener(v -> {
             // Przechodzi do ekranu mapy
             Intent intent = new Intent(this, Mapa.class);
+            startActivity(intent);
+        });
+
+        // Kliknięcie w przycisk "USTAWIENIA"
+        ((Button) findViewById(R.id.ustawieniaPrzycisk)).setOnClickListener(v -> {
+            // Przechodzi do ekranu mapy
+            Intent intent = new Intent(this, Ustawienia.class);
             startActivity(intent);
         });
 
