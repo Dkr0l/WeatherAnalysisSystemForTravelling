@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -28,6 +29,11 @@ import krolkozak.project.app.pomocnicze.AktualnaTrasaTekst;
 import krolkozak.project.app.tworzenietrasy.popup.PopupCzas;
 import krolkozak.project.app.tworzenietrasy.popup.PopupPrzystanek;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static krolkozak.project.app.tworzenietrasy.Mapa.kontekst;
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
 public class TworzenieTrasy extends Activity {
@@ -104,10 +110,16 @@ public class TworzenieTrasy extends Activity {
         lista_transport.setAdapter(adapter_transport);
 
         zatwierdzTrasePrzycisk.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.putExtra("stworzono trase", (String) lista_transport.getSelectedItem());
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            String srodekTransportu=(String)lista_transport.getSelectedItem();
+            int wybranyTransport=lista_transport.getSelectedItemPosition();
+            if(odlegloscKM(poczAuto.pomocDlugGeog, poczAuto.pomocSzerGeog, koniecAuto.pomocDlugGeog, koniecAuto.pomocSzerGeog)<200 ||(wybranyTransport!=2 && wybranyTransport!=3)) {
+                Intent intent = new Intent();
+                intent.putExtra("stworzono trase", srodekTransportu);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), "Trasa za długa na wybrany środek transportu!", Toast.LENGTH_LONG).show();
+            }
         });
 
         // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
@@ -147,5 +159,11 @@ public class TworzenieTrasy extends Activity {
 
     public static void zaktualiujTwojaTrasaTekst() {
         twojaTrasaTekst.setText(aktualnaTrasaTekst.pobierzPelnyTekstTrasy());
+    }
+
+    private double odlegloscKM(double dlugosc1, double szerokosc1, double dlugosc2, double szerokosc2){
+        double kmDlugosc=abs(dlugosc1-dlugosc2)*111.32;
+        double kmSzerokosc=40.075*cos(abs(szerokosc1-szerokosc2))/360;
+        return sqrt(pow(kmDlugosc, 2) + pow(kmSzerokosc, 2));
     }
 }
