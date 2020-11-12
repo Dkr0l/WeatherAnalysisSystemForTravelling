@@ -4,13 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ekrany.HistoriaEkran">
 
     <TextView
         android:id="@+id/historiaTekstPowitalny"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="HISTORIA"
-        android:textSize="50dp" />
+        android:textAlignment="center"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/historiaTekstInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:text="Ładowanie..."
+        android:textAlignment="center"
+        android:textSize="16dp" />
+
+    <de.codecrafters.tableview.TableView
+        android:id="@+id/historiaTabela"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="9999" />
+
 </LinearLayout>
