@@ -455,8 +455,8 @@ public class Trasa {
             znacznik.setSubDescription(nazwaLokacji + "<br>" + pelnaData);
 
             JSONObject koordynaty = new JSONObject();
-            koordynaty.put("szerGeog", szerGeog);
-            koordynaty.put("dlugGeog", dlugGeog);
+            koordynaty.put("szer_geog", szerGeog);
+            koordynaty.put("dlug_geog", dlugGeog);
 
             obiektPogodowy.put("koordynaty", koordynaty);
             obiektPogodowy.put("lokalizacja", nazwaLokacji);
