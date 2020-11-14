@@ -39,6 +39,7 @@ import java.util.List;
 
 import krolkozak.project.app.InterfejsAPI;
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.bazadanych.Historia;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -424,9 +425,17 @@ public class Trasa {
         String tytulZnacznika = "Wystąpił błąd.";
         if (danePogodowe != null) {
             dodajIkony(znacznik, Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3), kontekst);
-            String temperaturaTekst = "Temperatura: " + danePogodowe.get(0) + pogoda.jednostkaTemp;
-            String opadyTekst = "Opady: " + danePogodowe.get(1) + pogoda.jednostkaOpad;
-            String porywyWiatryTekst = "Porywy wiatru: " + danePogodowe.get(2) + pogoda.jednostkaPorywyWiatru;
+
+            double wartoscTemperatury=Double.parseDouble((String)danePogodowe.get(0));
+            if(Ustawienia.jednostkaTemperatury().equals("F")) wartoscTemperatury=wartoscTemperatury*1.8+32;
+            String temperaturaTekst = "Temperatura: " + wartoscTemperatury + Ustawienia.jednostkaTemperatury();
+
+            String opadyTekst = "Opady: " + danePogodowe.get(1) + Ustawienia.jednostkaOpadow();
+
+            double wartoscWiatru=Double.parseDouble((String)danePogodowe.get(2));
+            if(Ustawienia.jednostkaWiatru().equals("km/h"))wartoscWiatru*=3.6;
+            else if(Ustawienia.jednostkaWiatru().equals("mph"))wartoscWiatru*=2.23693629;
+            String porywyWiatryTekst = "Porywy wiatru: " + wartoscWiatru + Ustawienia.jednostkaWiatru();
             tytulZnacznika = temperaturaTekst + "\n" + opadyTekst + "\n" + porywyWiatryTekst;
 
             warunkiPogodowe.put("temperatura", temperaturaTekst);

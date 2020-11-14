@@ -15,12 +15,7 @@ import java.util.List;
 import krolkozak.project.app.InterfejsAPI;
 
 public class Pogoda {
-    // jednosta temperatury
-    protected String jednostkaTemp;
-    // jednosta opadów
-    protected String jednostkaOpad;
     // czas do przyjazdu do celu podróży
-    protected String jednostkaPorywyWiatru;
     protected int czasDoPrzyjazdu;
     // pomocnicza nazwa aplikacji do debuggowania
     private final String nazwaApki = "TRAVEL_APP";
@@ -83,17 +78,14 @@ public class Pogoda {
             // pobranie wartości temperatury
             JSONObject temperaturaJSON = odpowiedzJSON.getJSONObject("temp");
             temperatura = String.valueOf(new BigDecimal(temperaturaJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            jednostkaTemp = temperaturaJSON.getString("units");
 
             // pobranie wartości opadów
             JSONObject opadyJSON = odpowiedzJSON.getJSONObject("precipitation");
             opady = String.valueOf(new BigDecimal(opadyJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            jednostkaOpad = opadyJSON.getString("units");
 
             //pobranie wartości wiatru
             JSONObject wiatrJSON = odpowiedzJSON.getJSONObject("wind_gust");
             wiatr = String.valueOf(new BigDecimal(wiatrJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            jednostkaPorywyWiatru = wiatrJSON.getString("units");
 
             //pobranie kodu pogodowego
             JSONObject kodJSON=odpowiedzJSON.getJSONObject("weather_code");

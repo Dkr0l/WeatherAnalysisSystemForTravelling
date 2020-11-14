@@ -10,11 +10,13 @@
         <item>km/h</item>
         <item>mph</item>
         <item>m/s</item>
-        <item>Węzły</item>
-        <item>Beaufort</item>
     </string-array>
     <string-array name="jednostki_opadow">
         <item>l/m2h</item>
         <item>mm/h</item>
+    </string-array>
+    <string-array name="jednostki_temperatury">
+        <item>C</item>
+        <item>F</item>
     </string-array>
 </resources>
