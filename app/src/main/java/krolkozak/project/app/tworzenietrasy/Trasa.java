@@ -289,15 +289,15 @@ public class Trasa {
                     sekundy += (przystanki.get(numOdcinka).getCzasPostojuMinuty()) * 60;
                 }
             }
+
+            Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString());
+            Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());
+
+            dodajDokumentHistoriiDoBazy(historia);
         } catch (JSONException | IOException e) {
             // jeśli nie uda siędodać punktu pogodowego lub pobrać trasy - zostanie wyrzucony wyjątek
             Log.i(nazwaApki, "Blad punktow posrednich: " + e.getMessage());
         }
-
-        Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString());
-        Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());
-
-        dodajDokumentHistoriiDoBazy(historia);
     }
 
     private void dodajDokumentHistoriiDoBazy(Historia historia) {

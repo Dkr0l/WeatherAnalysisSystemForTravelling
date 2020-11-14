@@ -1,13 +1,13 @@
 package krolkozak.project.app.ekrany;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -116,10 +116,14 @@ public class HistoriaEkran extends Activity {
 
                 Log.i(nazwaApki, "Kliknięty wiesz nr " + rowIndex + ", dane: " + rekordTabeliHistoria.pobierzObiekt());
 
-                Toast.makeText(getApplicationContext(), "Wiersz numer " + (rowIndex + 1) + ", trasa: " + rekordTabeliHistoria.pobierzObiekt(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "Wiersz numer " + (rowIndex + 1) + ", trasa: " + rekordTabeliHistoria.pobierzObiekt(), Toast.LENGTH_LONG).show();
 
                 Historia dokumentHistorii = dokumentyHistorii.get(rowIndex);
                 Log.i(nazwaApki, "Kliknięty dokument historii w bazie: " + dokumentHistorii.pobierzObiekt());
+
+                Intent ekranMapaHistoria = new Intent(getApplicationContext(), MapaHistoria.class);
+                ekranMapaHistoria.putExtra("dokument_historii", dokumentHistorii);
+                startActivity(ekranMapaHistoria);
             }
         });
     }

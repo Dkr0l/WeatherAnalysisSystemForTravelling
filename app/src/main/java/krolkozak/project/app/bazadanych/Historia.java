@@ -1,6 +1,8 @@
 package krolkozak.project.app.bazadanych;
 
-public class Historia {
+import java.io.Serializable;
+
+public class Historia implements Serializable {
     private String id_uzytkownika;
     private String lokalizacja_poczatkowa;
     private String lokalizacja_koncowa;
