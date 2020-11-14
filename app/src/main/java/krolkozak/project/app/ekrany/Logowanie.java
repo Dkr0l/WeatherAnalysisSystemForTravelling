@@ -2,6 +2,7 @@ package krolkozak.project.app.ekrany;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.time.OffsetDateTime;
 
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.bazadanych.Uzytkownik;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
@@ -41,6 +43,15 @@ public class Logowanie extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //wczytanie ustawień z pamięci urządzenia
+        try{
+            SharedPreferences ustawienia=getSharedPreferences("ApkaPogodowa", MODE_PRIVATE);
+            Ustawienia.wczytajZPamieci(ustawienia.getAll());
+        }catch(NullPointerException e){
+            Log.i(nazwaApki, "Nie udało się wczytać ustawień z pamięci urządzenia!");
+        }
+
         setContentView(R.layout.logowanie);
 
         // Pobranie instancji uwierzytelniania firebase
