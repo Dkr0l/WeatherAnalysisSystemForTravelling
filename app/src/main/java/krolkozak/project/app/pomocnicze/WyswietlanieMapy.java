@@ -1,16 +1,27 @@
 package krolkozak.project.app.pomocnicze;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 
-import krolkozak.project.app.R;
+import java.util.ArrayList;
 
+import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class WyswietlanieMapy {
 
     public static void wyswietlWidokMapy(MapView mapa) {
@@ -33,22 +44,37 @@ public class WyswietlanieMapy {
         kontrolerMapy.setCenter(punktPoczatkowyMapy);
     }
 
-    public static void wyswietlZnacznikNaMapie(Context kontekst, MapView mapa, GeoPoint punktGeog, String tytulZnacznika, String opisZnacznika) {
+    public static void wyswietlZnacznikNaMapie(Context kontekst, MapView mapa, GeoPoint punktGeog, String tytulZnacznika, String opisZnacznika, int indeksObrazka) {
         Marker znacznik = new Marker(mapa);
 
         znacznik.setPosition(punktGeog);
         znacznik.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        // --------------------
-        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
-        znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
-        // --------------------
+        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
+        znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
 
         znacznik.setTitle(tytulZnacznika);
         znacznik.setSubDescription(opisZnacznika);
 
         mapa.getOverlays().add(znacznik);
 
+        mapa.invalidate();
+    }
+
+    public static void wyswietlTraseNaMapie(MapView mapa, ArrayList<GeoPoint> punkty, String typ_trasy) {
+        RoadManager zarzadcaTrasy = new MapQuestRoadManager("ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi");
+        zarzadcaTrasy.addRequestOption("routeType=" + typ_trasy);
+
+        Road trasa = new Road();
+
+        try {
+            trasa = zarzadcaTrasy.getRoad(punkty);
+        } catch (Exception e) {
+            Log.i(nazwaApki, "Nie udało się wyświetlić trasy na mapie: " + e.getMessage());
+        }
+
+        Polyline warstwaTrasy = RoadManager.buildRoadOverlay(trasa);
+        mapa.getOverlays().add(warstwaTrasy);
         mapa.invalidate();
     }
 

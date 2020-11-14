@@ -8,20 +8,23 @@ public class Historia implements Serializable {
     private String lokalizacja_koncowa;
     private String czas_wyjazdu;
     private String miejsca_pogodowe;
+    private String typ_trasy;
 
     public Historia() {
     }
 
-    public Historia(String id_uzytkownika, String lokalizacja_poczatkowa, String lokalizacja_koncowa, String czas_wyjazdu, String miejsca_pogodowe) {
+    public Historia(String id_uzytkownika, String lokalizacja_poczatkowa, String lokalizacja_koncowa, String czas_wyjazdu, String miejsca_pogodowe, String typ_trasy) {
         this.id_uzytkownika = id_uzytkownika;
         this.lokalizacja_poczatkowa = lokalizacja_poczatkowa;
         this.lokalizacja_koncowa = lokalizacja_koncowa;
         this.czas_wyjazdu = czas_wyjazdu;
         this.miejsca_pogodowe = miejsca_pogodowe;
+        this.typ_trasy = typ_trasy;
     }
 
     public String pobierzObiekt() {
-        return "id_uzytkownika: " + id_uzytkownika + ", lokalizacja_poczatkowa: " + lokalizacja_poczatkowa + ", lokalizacja_koncowa: " + lokalizacja_koncowa + ", czas_wyjazdu: " + czas_wyjazdu + ", miejsca_pogodowe: " + miejsca_pogodowe;
+        return "id_uzytkownika: " + id_uzytkownika + ", lokalizacja_poczatkowa: " + lokalizacja_poczatkowa + ", lokalizacja_koncowa: " + lokalizacja_koncowa
+                + ", czas_wyjazdu: " + czas_wyjazdu + ", miejsca_pogodowe: " + miejsca_pogodowe + ", typ_trasy: " + typ_trasy;
     }
 
     public String getId_uzytkownika() {
@@ -62,5 +65,13 @@ public class Historia implements Serializable {
 
     public void setMiejsca_pogodowe(String miejsca_pogodowe) {
         this.miejsca_pogodowe = miejsca_pogodowe;
+    }
+
+    public String getTyp_trasy() {
+        return typ_trasy;
+    }
+
+    public void setTyp_trasy(String typ_trasy) {
+        this.typ_trasy = typ_trasy;
     }
 }

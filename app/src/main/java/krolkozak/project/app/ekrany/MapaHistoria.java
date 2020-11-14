@@ -71,6 +71,8 @@ public class MapaHistoria extends Activity {
             Log.i(nazwaApki, "Nie udało się wyświetlić historii punktów pogodowych");
         }
 
+        WyswietlanieMapy.wyswietlTraseNaMapie(mapaHistoriaWidok, punkty, dokumentHistorii.getTyp_trasy());
+
         mapaHistoriaWidok.addOnFirstLayoutListener((v, left, top, right, bottom) -> {
             BoundingBox obszarDoWyswietlenia = BoundingBox.fromGeoPoints(punkty);
             mapaHistoriaWidok.zoomToBoundingBox(obszarDoWyswietlenia, true, ROZMIAR_RAMKI);
@@ -93,19 +95,22 @@ public class MapaHistoria extends Activity {
             JSONObject warunki = (JSONObject) obiektPogodowy.get("warunki");
 
             String tytulZnacznika = "Błąd pogody.";
-            if (warunki.has("temperatura") && warunki.has("opady") && warunki.has("porywy_wiatru")) {
+            int indeksObrazka = R.drawable.marker_default;
+            if (warunki.has("temperatura") && warunki.has("opady") && warunki.has("porywy_wiatru") && warunki.has("indeks_obrazka")) {
                 String temperatura = warunki.getString("temperatura");
                 String opady = warunki.getString("opady");
                 String porywyWiatru = warunki.getString("porywy_wiatru");
 
                 tytulZnacznika = temperatura + "\n" + opady + "\n" + porywyWiatru;
+
+                indeksObrazka = warunki.getInt("indeks_obrazka");
             }
 
             String lokalizacja = obiektPogodowy.getString("lokalizacja");
             String czas = obiektPogodowy.getString("czas");
             String opisZnacznika = lokalizacja + "<br>" + czas;
 
-            WyswietlanieMapy.wyswietlZnacznikNaMapie(kontekst, mapaHistoriaWidok, punktGeog, tytulZnacznika, opisZnacznika);
+            WyswietlanieMapy.wyswietlZnacznikNaMapie(kontekst, mapaHistoriaWidok, punktGeog, tytulZnacznika, opisZnacznika, indeksObrazka);
         }
     }
 

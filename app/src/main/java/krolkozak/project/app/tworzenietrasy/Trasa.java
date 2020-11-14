@@ -291,7 +291,7 @@ public class Trasa {
                 }
             }
 
-            Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString());
+            Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString(), transport_doURL);
             Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());
 
             dodajDokumentHistoriiDoBazy(historia);
@@ -424,23 +424,27 @@ public class Trasa {
         // sformatowanie parametrów pogody oraz wyświetlenie ich jako tytuł
         String tytulZnacznika = "Wystąpił błąd.";
         if (danePogodowe != null) {
-            dodajIkony(znacznik, Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3), kontekst);
+            final int indeksObrazka = pobierzIndeksObrazka(Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3));
+            znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
+            znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
 
-            double wartoscTemperatury=Double.parseDouble((String)danePogodowe.get(0));
-            if(Ustawienia.jednostkaTemperatury().equals("F")) wartoscTemperatury=wartoscTemperatury*1.8+32;
+            double wartoscTemperatury = Double.parseDouble((String) danePogodowe.get(0));
+            if (Ustawienia.jednostkaTemperatury().equals("F"))
+                wartoscTemperatury = wartoscTemperatury * 1.8 + 32;
             String temperaturaTekst = "Temperatura: " + wartoscTemperatury + Ustawienia.jednostkaTemperatury();
 
             String opadyTekst = "Opady: " + danePogodowe.get(1) + Ustawienia.jednostkaOpadow();
 
-            double wartoscWiatru=Double.parseDouble((String)danePogodowe.get(2));
-            if(Ustawienia.jednostkaWiatru().equals("km/h"))wartoscWiatru*=3.6;
-            else if(Ustawienia.jednostkaWiatru().equals("mph"))wartoscWiatru*=2.23693629;
+            double wartoscWiatru = Double.parseDouble((String) danePogodowe.get(2));
+            if (Ustawienia.jednostkaWiatru().equals("km/h")) wartoscWiatru *= 3.6;
+            else if (Ustawienia.jednostkaWiatru().equals("mph")) wartoscWiatru *= 2.23693629;
             String porywyWiatryTekst = "Porywy wiatru: " + wartoscWiatru + Ustawienia.jednostkaWiatru();
             tytulZnacznika = temperaturaTekst + "\n" + opadyTekst + "\n" + porywyWiatryTekst;
 
             warunkiPogodowe.put("temperatura", temperaturaTekst);
             warunkiPogodowe.put("opady", opadyTekst);
             warunkiPogodowe.put("porywy_wiatru", porywyWiatryTekst);
+            warunkiPogodowe.put("indeks_obrazka", indeksObrazka);
         }
         znacznik.setTitle(tytulZnacznika);
 
@@ -489,6 +493,54 @@ public class Trasa {
 
         // -------------- ODSWIEZENIE MAPY --------------
         mapa.invalidate();
+    }
+
+    public int pobierzIndeksObrazka(Double wiatr, Double opady, String kodPogodowy) {
+        switch (kodPogodowy) {
+//            case "freezing_rain_heavy":
+//            case "freezing_rain":
+//            case "freezing_rain_light":
+//            case "freezing_drizzle":
+//            case "ice_pellets_heavy":
+//            case "ice_pellets":
+            case "ice_pellets_light":
+                return R.drawable.blizzard;
+//            case "snow_heavy":
+//            case "snow":
+            case "snow_light":
+                return R.drawable.snow;
+            case "flurries":
+                return R.drawable.winter;
+            case "tstorm":
+                if (wiatr <= 10 && opady <= 1) {
+                    return R.drawable.thunderstorm;
+                } else if (opady > 1) {
+                    return R.drawable.storm2;
+                } else if (wiatr > 10) {
+                    return R.drawable.storm;
+                }
+            case "rain_heavy":
+                return R.drawable.rain2;
+//            case "rain":
+//            case "rain_light":
+            case "drizzle":
+                return R.drawable.rain3;
+//            case "fog_light":
+            case "fog":
+                return R.drawable.fog;
+            case "cloudy":
+                return R.drawable.clouds_heavy;
+            case "mostly_cloudy":
+                return R.drawable.mostly_cloudy;
+            case "partly_cloudy":
+                return R.drawable.cloudy;
+            case "mostly_clear":
+                return R.drawable.cloud;
+            case "clear":
+                return R.drawable.sun;
+            default:
+                return R.drawable.marker_default;
+        }
     }
 
     public void zatrzymaj() {
