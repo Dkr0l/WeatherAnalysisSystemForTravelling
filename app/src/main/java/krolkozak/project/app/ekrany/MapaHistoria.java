@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
@@ -38,7 +39,6 @@ public class MapaHistoria extends Activity {
     private Context kontekst;
     private final int kodZadaniaUprawnien = 1;
     private final int ROZMIAR_RAMKI = 200;
-    private ArrayList<GeoPoint> punkty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,6 @@ public class MapaHistoria extends Activity {
 
         kontekst = getApplicationContext();
         mapaHistoriaWidok = (MapView) findViewById(R.id.mapaHistoriaWidok);
-        punkty = new ArrayList<>();
 
         // Kliknięcie w przycisk "COFNIJ"
         ((Button) findViewById(R.id.mapaHistoriaCofnijPrzycisk)).setOnClickListener(v -> {
@@ -60,6 +59,9 @@ public class MapaHistoria extends Activity {
         dokumentHistorii = (Historia) ekranMapaHistoria.getExtras().getSerializable("dokument_historii");
         Log.i(nazwaApki, "Pobrany dokument historii z aktywności historii: " + dokumentHistorii.pobierzObiekt());
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         Configuration.getInstance().load(kontekst, PreferenceManager.getDefaultSharedPreferences(kontekst));
         zapytajOUprawnieniaJesliKonieczne(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
 
@@ -71,13 +73,17 @@ public class MapaHistoria extends Activity {
             Log.i(nazwaApki, "Nie udało się wyświetlić historii punktów pogodowych");
         }
 
-        WyswietlanieMapy.wyswietlTraseNaMapie(mapaHistoriaWidok, punkty, dokumentHistorii.getTyp_trasy());
+        try {
+            ArrayList<GeoPoint> punkty = WyswietlanieMapy.wyswietlTraseNaMapie(mapaHistoriaWidok, dokumentHistorii.getPunkty_trasy(), dokumentHistorii.getTyp_trasy());
 
-        mapaHistoriaWidok.addOnFirstLayoutListener((v, left, top, right, bottom) -> {
-            BoundingBox obszarDoWyswietlenia = BoundingBox.fromGeoPoints(punkty);
-            mapaHistoriaWidok.zoomToBoundingBox(obszarDoWyswietlenia, true, ROZMIAR_RAMKI);
-            mapaHistoriaWidok.invalidate();
-        });
+            mapaHistoriaWidok.addOnFirstLayoutListener((v, left, top, right, bottom) -> {
+                BoundingBox obszarDoWyswietlenia = BoundingBox.fromGeoPoints(punkty);
+                mapaHistoriaWidok.zoomToBoundingBox(obszarDoWyswietlenia, true, ROZMIAR_RAMKI);
+                mapaHistoriaWidok.invalidate();
+            });
+        } catch (JSONException e) {
+            Log.i(nazwaApki, "Nie udało się wyświetlić trasy na mapie: " + e.getMessage());
+        }
     }
 
     private void wyswietlPunktyPogodowe() throws JSONException {
@@ -90,7 +96,6 @@ public class MapaHistoria extends Activity {
             double szerGeog = koordynaty.getDouble("szer_geog");
             double dlugGeog = koordynaty.getDouble("dlug_geog");
             GeoPoint punktGeog = new GeoPoint(szerGeog, dlugGeog);
-            punkty.add(punktGeog);
 
             JSONObject warunki = (JSONObject) obiektPogodowy.get("warunki");
 

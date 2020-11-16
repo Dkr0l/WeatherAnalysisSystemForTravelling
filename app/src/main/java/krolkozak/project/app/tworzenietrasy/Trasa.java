@@ -291,7 +291,16 @@ public class Trasa {
                 }
             }
 
-            Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString(), transport_doURL);
+            JSONArray punktyTrasy = new JSONArray();
+            for (GeoPoint punkt : punkty) {
+                JSONObject koordynaty = new JSONObject();
+                koordynaty.put("szer_geog", punkt.getLatitude());
+                koordynaty.put("dlug_geog", punkt.getLongitude());
+
+                punktyTrasy.put(koordynaty);
+            }
+
+            Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString(), transport_doURL, punktyTrasy.toString());
             Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());
 
             dodajDokumentHistoriiDoBazy(historia);

@@ -6,6 +6,9 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -61,9 +64,22 @@ public class WyswietlanieMapy {
         mapa.invalidate();
     }
 
-    public static void wyswietlTraseNaMapie(MapView mapa, ArrayList<GeoPoint> punkty, String typ_trasy) {
+    public static ArrayList<GeoPoint> wyswietlTraseNaMapie(MapView mapa, String punktyTrasy, String typTrasy) throws JSONException {
         RoadManager zarzadcaTrasy = new MapQuestRoadManager("ElrQRaDB6PgzWPc9z2n3LXGuZ8KfjFfi");
-        zarzadcaTrasy.addRequestOption("routeType=" + typ_trasy);
+        zarzadcaTrasy.addRequestOption("routeType=" + typTrasy);
+
+        ArrayList<GeoPoint> punkty = new ArrayList<>();
+        JSONArray punktyTrasyJSON = new JSONArray(punktyTrasy);
+
+        for (int i = 0; i < punktyTrasyJSON.length(); i++) {
+            JSONObject koordynaty = (JSONObject) punktyTrasyJSON.getJSONObject(i);
+
+            double szerGeog = koordynaty.getDouble("szer_geog");
+            double dlugGeog = koordynaty.getDouble("dlug_geog");
+
+            GeoPoint punktGeog = new GeoPoint(szerGeog, dlugGeog);
+            punkty.add(punktGeog);
+        }
 
         Road trasa = new Road();
 
@@ -76,6 +92,8 @@ public class WyswietlanieMapy {
         Polyline warstwaTrasy = RoadManager.buildRoadOverlay(trasa);
         mapa.getOverlays().add(warstwaTrasy);
         mapa.invalidate();
+
+        return punkty;
     }
 
 }
