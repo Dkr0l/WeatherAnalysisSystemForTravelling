@@ -94,7 +94,6 @@ public class Mapa extends Activity {
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
-        znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
         znajdzTrasePrzycisk.setEnabled(false);
     }
 

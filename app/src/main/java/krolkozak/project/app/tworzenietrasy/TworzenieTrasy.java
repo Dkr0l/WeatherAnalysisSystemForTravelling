@@ -3,6 +3,7 @@ package krolkozak.project.app.tworzenietrasy;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,9 +106,6 @@ public class TworzenieTrasy extends Activity {
 
         // ustawienie pozycji na liście wyboru środka transportu
         Spinner lista_transport = (Spinner) findViewById(R.id.wybor_srodka_transportu);
-        ArrayAdapter<CharSequence> adapter_transport = ArrayAdapter.createFromResource(this, R.array.srodek_transportu, android.R.layout.simple_spinner_item);
-        adapter_transport.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lista_transport.setAdapter(adapter_transport);
 
         zatwierdzTrasePrzycisk.setOnClickListener(v -> {
             String srodekTransportu=(String)lista_transport.getSelectedItem();
