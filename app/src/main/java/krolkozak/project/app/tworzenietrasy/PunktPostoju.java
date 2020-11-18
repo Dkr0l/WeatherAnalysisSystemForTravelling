@@ -1,11 +1,11 @@
 package krolkozak.project.app.tworzenietrasy;
 
-public class PunkPostoju {
+public class PunktPostoju {
     private double szerGeog, dlugGeog;
     private String nazwa;
     private int czasPostojuMinuty;
 
-    public PunkPostoju(double szerGeog, double dlugGeog, String nazwa, int czasPostojuMinuty) {
+    public PunktPostoju(double szerGeog, double dlugGeog, String nazwa, int czasPostojuMinuty) {
         this.szerGeog = szerGeog;
         this.dlugGeog = dlugGeog;
         this.nazwa = nazwa;

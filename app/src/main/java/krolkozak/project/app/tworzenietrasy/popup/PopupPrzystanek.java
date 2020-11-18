@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi;
 import krolkozak.project.app.R;
 import krolkozak.project.app.tworzenietrasy.Autouzupelnianie;
 import krolkozak.project.app.tworzenietrasy.Mapa;
-import krolkozak.project.app.tworzenietrasy.PunkPostoju;
+import krolkozak.project.app.tworzenietrasy.PunktPostoju;
 import krolkozak.project.app.tworzenietrasy.TworzenieTrasy;
 
 public class PopupPrzystanek extends Activity {
@@ -40,7 +40,7 @@ public class PopupPrzystanek extends Activity {
         dodajPrzystanekPrzycisk.setOnClickListener(v -> {
             int czasPostojuMinuty = dlugoscPostojuMinuty.getValue() + 60 * dlugoscPostojuGodziny.getValue();
             //dodanie przystanku do listy punktów
-            Mapa.trasa.przystanki.add(new PunkPostoju(przystanekAuto.pomocSzerGeog, przystanekAuto.pomocDlugGeog, przystanekAuto.nazwaMiejsca, czasPostojuMinuty));
+            Mapa.trasa.przystanki.add(new PunktPostoju(przystanekAuto.pomocSzerGeog, przystanekAuto.pomocDlugGeog, przystanekAuto.nazwaMiejsca, czasPostojuMinuty));
 
             String aktualnePrzystanki = TworzenieTrasy.aktualnaTrasaTekst.getPrzystankiTekst();
             String nowyPrzystanekTekst = przystanekAuto.nazwaMiejsca + " (" + czasPostojuMinuty + "min)";

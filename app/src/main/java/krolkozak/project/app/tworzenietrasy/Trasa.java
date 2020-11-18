@@ -51,7 +51,7 @@ public class Trasa {
     // koordynaty geograficzne
     public double szerGeog1, dlugGeog1;
     public double szerGeog2, dlugGeog2;
-    public ArrayList<PunkPostoju> przystanki = new ArrayList<>();
+    public ArrayList<PunktPostoju> przystanki = new ArrayList<>();
     //środek transportu
     public String srodek_transportu;
     private String transport_doURL = "";
@@ -148,7 +148,7 @@ public class Trasa {
             int czasPostojuMinutySuma = 0;
             if (przystanki.size() > 0) {
                 for (int numPrzystanku = 0; numPrzystanku < przystanki.size(); numPrzystanku++) {
-                    PunkPostoju przystanek = przystanki.get(numPrzystanku);
+                    PunktPostoju przystanek = przystanki.get(numPrzystanku);
                     czasPostojuMinutySuma += przystanek.getCzasPostojuMinuty();
                     url.append("\"").append(przystanek.getSzerGeog()).append(",").append(przystanek.getDlugGeog()).append("\",");
                 }
@@ -200,20 +200,6 @@ public class Trasa {
 
         // -------------- DODANIE ZNACZNIKOW NA MAPIE --------------
         try {
-            // dodanie punktów geograficznych do listy
-            punkty.add(new GeoPoint(szerGeog1, dlugGeog1));
-            if (przystanki.size() > 0) {
-                for (int numPrzystanku = 0; numPrzystanku < przystanki.size(); numPrzystanku++) {
-                    PunkPostoju przystanek = przystanki.get(numPrzystanku);
-                    punkty.add(new GeoPoint(przystanek.getSzerGeog(), przystanek.getDlugGeog()));
-                }
-            }
-            punkty.add(new GeoPoint(szerGeog2, dlugGeog2));
-
-            // -------------- KADROWANIE EKRANU --------------
-            // skadrowanie widoku mapy na podstawie listy punktów
-            mapa.zoomToBoundingBox(BoundingBox.fromGeoPoints(punkty), true, ROZMIAR_RAMKI);
-
             // wywołanie metody, która doda znacznik na mapie z informacją o miejscu, czasu i pogodzie
             // w danym punkcie na mapie
             dodajPunktPogodowy(szerGeog1, dlugGeog1, czasWyjazdu, kontekst, 1);
@@ -227,6 +213,10 @@ public class Trasa {
         int odstep = pogoda.wyznaczDlugoscOdstepu();
         // wywołanie metody, która doda punkty pośrednie na trasie z obliczonym odstępem
         dodajPunktyPosrednie(trasaJSON, odstep, kontekst);
+
+        // -------------- KADROWANIE EKRANU --------------
+        // skadrowanie widoku mapy na podstawie listy punktów
+        mapa.zoomToBoundingBox(BoundingBox.fromGeoPoints(punkty), true, ROZMIAR_RAMKI);
 
         // -------------- TWORZENIE TRASY POMIEDZY DWOMA PUNTKAMI NA MAPIE --------------
         // utworzenie zarzadcy trasy z podanym kluczem API
@@ -257,7 +247,13 @@ public class Trasa {
             JSONObject manewr;
             JSONObject koordynatyJSON = new JSONObject();
             JSONObject koordynatyPoprzednieJSON = new JSONObject();
+            punkty.add(new GeoPoint(szerGeog1, dlugGeog1));
             for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
+                PunktPostoju obecnyPrzystanek;
+                if(numOdcinka<przystanki.size()) {
+                    obecnyPrzystanek = przystanki.get(numOdcinka);
+                    punkty.add(new GeoPoint(obecnyPrzystanek.getSzerGeog(), obecnyPrzystanek.getDlugGeog()));
+                }
                 JSONArray manewryJSON = obiektLegsJSON.getJSONObject(numOdcinka).getJSONArray("maneuvers");
                 int dodanePunkty = 0;
                 // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
@@ -270,6 +266,7 @@ public class Trasa {
                             koordynatyPoprzednieJSON = koordynatyJSON;
                         }
                         koordynatyJSON = manewr.getJSONObject("startPoint");
+                        punkty.add(new GeoPoint(koordynatyJSON.getDouble("lat"), koordynatyJSON.getDouble("lng")));
                         if (sumaCzasu > odstep && dodanePunkty > 0) {
                             double latSr = (koordynatyPoprzednieJSON.getDouble("lat") + koordynatyJSON.getDouble("lat")) / 2;
                             double lngSr = (koordynatyPoprzednieJSON.getDouble("lng") + koordynatyJSON.getDouble("lng")) / 2;
@@ -290,6 +287,7 @@ public class Trasa {
                     sekundy += (przystanki.get(numOdcinka).getCzasPostojuMinuty()) * 60;
                 }
             }
+            punkty.add(new GeoPoint(szerGeog2, dlugGeog2));
 
             JSONArray punktyTrasy = new JSONArray();
             for (GeoPoint punkt : punkty) {
