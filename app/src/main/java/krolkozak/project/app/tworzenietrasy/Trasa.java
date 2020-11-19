@@ -126,6 +126,10 @@ public class Trasa {
             // sformatowanie koordynatów, aby pasowały do adresu zapytania API
             String koordynaty1 = szerGeog1 + "," + dlugGeog1;
             String koordynaty2 = szerGeog2 + "," + dlugGeog2;
+
+            //domyślny środek transportu (jeżeli żaden nie został wybrany)
+            if(srodek_transportu==null)srodek_transportu="\uD83D\uDE97 samochód: najszybsza trasa";
+
             switch (srodek_transportu) {
                 case "\uD83D\uDE97 samochód: najszybsza trasa":
                     transport_doURL = "fastest";
@@ -338,78 +342,6 @@ public class Trasa {
         }
     }
 
-    private void dodajIkony(Marker znacznik, Double wiatr, Double opady, String kodPogodowy, Context kontekst) {
-        switch (kodPogodowy) {
-            case "freezing_rain_heavy":
-            case "freezing_rain":
-            case "freezing_rain_light":
-            case "freezing_drizzle":
-            case "ice_pellets_heavy":
-            case "ice_pellets":
-            case "ice_pellets_light":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.blizzard));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.blizzard));
-                break;
-            case "snow_heavy":
-            case "snow":
-            case "snow_light":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.snow));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.snow));
-                break;
-            case "flurries":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.winter));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.winter));
-                break;
-            case "tstorm":
-                if (wiatr <= 10 && opady <= 1) {
-                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.thunderstorm));
-                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.thunderstorm));
-                } else if (opady > 1) {
-                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.storm2));
-                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.storm2));
-                } else if (wiatr > 10) {
-                    znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.storm));
-                    znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.storm));
-                }
-                break;
-            case "rain_heavy":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.rain2));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.rain2));
-                break;
-            case "rain":
-            case "rain_light":
-            case "drizzle":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.rain3));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.rain3));
-                break;
-            case "fog_light":
-            case "fog":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.fog));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.fog));
-                break;
-            case "cloudy":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.clouds_heavy));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.clouds_heavy));
-                break;
-            case "mostly_cloudy":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.mostly_cloudy));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.mostly_cloudy));
-                break;
-            case "partly_cloudy":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.cloudy));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.cloudy));
-                break;
-            case "mostly_clear":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.cloud));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.cloud));
-                break;
-            case "clear":
-                znacznik.setIcon(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
-                znacznik.setImage(kontekst.getApplicationContext().getDrawable(R.drawable.sun));
-                break;
-        }
-    }
-
     // -------------- DODANIE PUNKTU Z POGODA NA MAPIE --------------
     @RequiresApi(api = Build.VERSION_CODES.O)
     // metoda dodająca znacznik na mapie z informacją o pogodzie, miejscu i czasie, na podstawie
@@ -430,10 +362,9 @@ public class Trasa {
         // -------------- SFORMATOWANIE DANYCH O POGODZIE I WYSWIETLENIE --------------
         // sformatowanie parametrów pogody oraz wyświetlenie ich jako tytuł
         String tytulZnacznika = "Wystąpił błąd.";
+        int indeksObrazka=R.drawable.error;
         if (danePogodowe != null) {
-            final int indeksObrazka = pobierzIndeksObrazka(Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3));
-            znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
-            znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
+             indeksObrazka = pobierzIndeksObrazka(Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3));
 
             double wartoscTemperatury = Double.parseDouble((String) danePogodowe.get(0));
             if (Ustawienia.jednostkaTemperatury().equals("F"))
@@ -453,6 +384,8 @@ public class Trasa {
             warunkiPogodowe.put("porywy_wiatru", porywyWiatryTekst);
             warunkiPogodowe.put("indeks_obrazka", indeksObrazka);
         }
+        znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
+        znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
         znacznik.setTitle(tytulZnacznika);
 
         // -------------- SFORMATOWANIE ADRESU ORAZ DATY I WYSWIETLENIE --------------
@@ -504,16 +437,16 @@ public class Trasa {
 
     public int pobierzIndeksObrazka(Double wiatr, Double opady, String kodPogodowy) {
         switch (kodPogodowy) {
-//            case "freezing_rain_heavy":
-//            case "freezing_rain":
-//            case "freezing_rain_light":
-//            case "freezing_drizzle":
-//            case "ice_pellets_heavy":
-//            case "ice_pellets":
+            case "freezing_rain_heavy":
+            case "freezing_rain":
+            case "freezing_rain_light":
+            case "freezing_drizzle":
+            case "ice_pellets_heavy":
+            case "ice_pellets":
             case "ice_pellets_light":
                 return R.drawable.blizzard;
-//            case "snow_heavy":
-//            case "snow":
+            case "snow_heavy":
+            case "snow":
             case "snow_light":
                 return R.drawable.snow;
             case "flurries":
@@ -528,11 +461,11 @@ public class Trasa {
                 }
             case "rain_heavy":
                 return R.drawable.rain2;
-//            case "rain":
-//            case "rain_light":
+            case "rain":
+            case "rain_light":
             case "drizzle":
                 return R.drawable.rain3;
-//            case "fog_light":
+            case "fog_light":
             case "fog":
                 return R.drawable.fog;
             case "cloudy":
@@ -546,7 +479,7 @@ public class Trasa {
             case "clear":
                 return R.drawable.sun;
             default:
-                return R.drawable.marker_default;
+                return R.drawable.error;
         }
     }
 

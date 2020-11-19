@@ -76,16 +76,19 @@ public class Pogoda {
             JSONObject odpowiedzJSON = new JSONArray(String.valueOf(odpowiedz)).getJSONObject(0);
 
             // pobranie wartości temperatury
-            JSONObject temperaturaJSON = odpowiedzJSON.getJSONObject("temp");
-            temperatura = String.valueOf(new BigDecimal(temperaturaJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            Object temperaturaObjekt = odpowiedzJSON.getJSONObject("temp").get("value");
+            if(temperaturaObjekt==null)temperaturaObjekt="0";
+            temperatura = String.valueOf(new BigDecimal(temperaturaObjekt.toString()).setScale(1, RoundingMode.HALF_UP).doubleValue());
 
             // pobranie wartości opadów
-            JSONObject opadyJSON = odpowiedzJSON.getJSONObject("precipitation");
-            opady = String.valueOf(new BigDecimal(opadyJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            Object opadyObjekt = odpowiedzJSON.getJSONObject("precipitation").get("value");
+            if(opadyObjekt==null)opadyObjekt="0";
+            opady = String.valueOf(new BigDecimal(opadyObjekt.toString()).setScale(1, RoundingMode.HALF_UP).doubleValue());
 
             //pobranie wartości wiatru
-            JSONObject wiatrJSON = odpowiedzJSON.getJSONObject("wind_gust");
-            wiatr = String.valueOf(new BigDecimal(wiatrJSON.getString("value")).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            Object wiatrObiekt = odpowiedzJSON.getJSONObject("wind_gust").get("value");
+            if(wiatrObiekt==null)wiatrObiekt="0";
+            wiatr = String.valueOf(new BigDecimal(wiatrObiekt.toString()).setScale(1, RoundingMode.HALF_UP).doubleValue());
 
             //pobranie kodu pogodowego
             JSONObject kodJSON=odpowiedzJSON.getJSONObject("weather_code");
