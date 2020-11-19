@@ -11,8 +11,12 @@ import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.type.DateTime;
+
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 import krolkozak.project.app.R;
 import krolkozak.project.app.tworzenietrasy.TworzenieTrasy;
@@ -35,11 +39,15 @@ public class PopupCzas extends Activity {
         int wysokosc = parametryOkna.heightPixels;
         getWindow().setLayout((int) (szerokosc * .8), (int) (wysokosc * .8));
 
-        Button czasZatwierdzPrzycisk = (Button) findViewById(R.id.czasZatwierdzPrzycisk);
+        Button czasZatwierdzPrzycisk = findViewById(R.id.czasZatwierdzPrzycisk);
+        wyborDaty = findViewById(R.id.dataWybor);
+        wyborGodziny = findViewById(R.id.czasWybor);
+
+        //ograniczenie kalendarza do 2 tygodzni w przód
+        ustawOknoCzasu(wyborDaty);
+
         czasZatwierdzPrzycisk.setOnClickListener(v -> {
             //zapisanie daty i czasu
-            wyborDaty = (DatePicker) findViewById(R.id.dataWybor);
-            wyborGodziny = (TimePicker) findViewById(R.id.czasWybor);
             minuta = wyborGodziny.getMinute();
             godzina = wyborGodziny.getHour();
             dzien = wyborDaty.getDayOfMonth();
@@ -57,5 +65,15 @@ public class PopupCzas extends Activity {
             setResult(Activity.RESULT_OK, intent);
             finish();
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void ustawOknoCzasu(DatePicker kalendarz){
+        LocalDate teraz= LocalDate.now();
+        final int milisekundWDniu=86400000;
+        //przeliczenie na milisekundy
+        long milisekundyEpoch=teraz.toEpochDay()*milisekundWDniu;
+        kalendarz.setMinDate(milisekundyEpoch);
+        kalendarz.setMaxDate(milisekundyEpoch+milisekundWDniu*13);
     }
 }

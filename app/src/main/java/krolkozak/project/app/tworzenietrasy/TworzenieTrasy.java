@@ -70,20 +70,20 @@ public class TworzenieTrasy extends Activity {
         // -------------- INICJALIZACJA ZMIENNYCH --------------
         // przypisanie referencji
         // pól tekstowych z automatycznymi podpowiedziami do zmiennych klasy
-        poczatekAutouzupelnianie = (AutoCompleteTextView) findViewById(R.id.poczatekAuto);
-        koniecAutouzupelnianie = (AutoCompleteTextView) findViewById(R.id.koniecAuto);
+        poczatekAutouzupelnianie = findViewById(R.id.poczatekAuto);
+        koniecAutouzupelnianie = findViewById(R.id.koniecAuto);
 
         // przycisków
-        wyczyscPoczatekPrzycisk = (Button) findViewById(R.id.wyczyscPoczatekPrzycisk);
-        wyczyscKoniecPrzycisk = (Button) findViewById(R.id.wyczyscKoniecPrzycisk);
-        zatwierdzTrasePrzycisk = (Button) findViewById(R.id.zatwierdzTrasePrzycisk);
+        wyczyscPoczatekPrzycisk = findViewById(R.id.wyczyscPoczatekPrzycisk);
+        wyczyscKoniecPrzycisk = findViewById(R.id.wyczyscKoniecPrzycisk);
+        zatwierdzTrasePrzycisk = findViewById(R.id.zatwierdzTrasePrzycisk);
 
         // klawiatury i lokalizacji
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         manadzerLokalizacji = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // przypisanie widoku wyświetlającego tekst aktualnych danych trasy do zmiennej i dodanie paska przewijania
-        twojaTrasaTekst = (TextView) findViewById(R.id.twojaTrasaTekst);
+        twojaTrasaTekst = findViewById(R.id.twojaTrasaTekst);
         twojaTrasaTekst.setMovementMethod(new ScrollingMovementMethod());
         aktualnaTrasaTekst = new AktualnaTrasaTekst();
 
@@ -93,19 +93,19 @@ public class TworzenieTrasy extends Activity {
         Autouzupelnianie koniecAuto = new Autouzupelnianie(koniecAutouzupelnianie, wyczyscKoniecPrzycisk, 2);
 
         // przypisanie okna wybierania czasu wyjazdu do przycisku
-        ((Button) findViewById(R.id.czasPrzycisk)).setOnClickListener(v -> {
+        findViewById(R.id.czasPrzycisk).setOnClickListener(v -> {
             Intent popupIntent = new Intent(this, PopupCzas.class);
             startActivityForResult(popupIntent, DATA_WYJAZDU);
         });
 
         // przypisanie okna dodawania przystanku do przycisku
-        ((Button) findViewById(R.id.dodajPunktPrzycisk)).setOnClickListener(v -> {
+        findViewById(R.id.dodajPunktPrzycisk).setOnClickListener(v -> {
             Intent popupIntent = new Intent(this, PopupPrzystanek.class);
             startActivity(popupIntent);
         });
 
         // ustawienie pozycji na liście wyboru środka transportu
-        Spinner lista_transport = (Spinner) findViewById(R.id.wybor_srodka_transportu);
+        Spinner lista_transport = findViewById(R.id.wybor_srodka_transportu);
 
         zatwierdzTrasePrzycisk.setOnClickListener(v -> {
             String srodekTransportu=(String)lista_transport.getSelectedItem();
