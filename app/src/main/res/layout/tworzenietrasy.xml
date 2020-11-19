@@ -73,7 +73,8 @@
         <Spinner
             android:id="@+id/wybor_srodka_transportu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:entries="@array/srodek_transportu"/>
 
     </LinearLayout>
 
