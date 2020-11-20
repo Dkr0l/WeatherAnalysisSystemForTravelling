@@ -362,26 +362,27 @@ public class Trasa {
         // -------------- SFORMATOWANIE DANYCH O POGODZIE I WYSWIETLENIE --------------
         // sformatowanie parametrów pogody oraz wyświetlenie ich jako tytuł
         String tytulZnacznika = "Wystąpił błąd.";
+
         int indeksObrazka=R.drawable.error;
         if (danePogodowe != null) {
-             indeksObrazka = pobierzIndeksObrazka(Double.parseDouble((String) danePogodowe.get(2)), Double.parseDouble((String) danePogodowe.get(1)), (String) danePogodowe.get(3));
+             indeksObrazka = pobierzIndeksObrazka((String) danePogodowe.get(0));
 
-            double wartoscTemperatury = Double.parseDouble((String) danePogodowe.get(0));
-            if (Ustawienia.jednostkaTemperatury().equals("F"))
-                wartoscTemperatury = wartoscTemperatury * 1.8 + 32;
-            String temperaturaTekst = "Temperatura: " + wartoscTemperatury + Ustawienia.jednostkaTemperatury();
+            tytulZnacznika ="";
+            if(Ustawienia.wyswietlicOpadyIntensywnosc())tytulZnacznika+=danePogodowe.get(1)+"\n";
+            if(Ustawienia.wyswietlicOpadySzansa() && !Pogoda.typPrognozy.equals("nowcast"))tytulZnacznika+=danePogodowe.get(2)+"\n";
+            else if(Ustawienia.wyswietlicOpadySzansa() && Pogoda.typPrognozy.equals("nowcast") && !Ustawienia.wyswietlicOpadyIntensywnosc())tytulZnacznika+=danePogodowe.get(1)+"\n";
+            if(Ustawienia.wyswietlicTemp())tytulZnacznika+=danePogodowe.get(3)+"\n";
+            if(Ustawienia.wyswietlicTempOdczuwalna())tytulZnacznika+=danePogodowe.get(4)+"\n";
+            if(Ustawienia.wyswietlicWiatrSr())tytulZnacznika+=danePogodowe.get(5)+"\n";
+            if(Ustawienia.wyswietlicCisnienie())tytulZnacznika+=danePogodowe.get(6)+"\n";
+            if(Ustawienia.wyswietlicWiatrKierunek())tytulZnacznika+=danePogodowe.get(7)+"\n";
+            if(Ustawienia.wyswietlicWilgotnosc())tytulZnacznika+=danePogodowe.get(8)+"\n";
+            if(Ustawienia.wyswietlicWiatrWPorywach())tytulZnacznika+=danePogodowe.get(9)+"\n";
+            if(Ustawienia.wyswietlicZachmurzenie())tytulZnacznika+=danePogodowe.get(10)+"\n";
 
-            String opadyTekst = "Opady: " + danePogodowe.get(1) + Ustawienia.jednostkaOpadow();
-
-            double wartoscWiatru = Double.parseDouble((String) danePogodowe.get(2));
-            if (Ustawienia.jednostkaWiatru().equals("km/h")) wartoscWiatru *= 3.6;
-            else if (Ustawienia.jednostkaWiatru().equals("mph")) wartoscWiatru *= 2.23693629;
-            String porywyWiatryTekst = "Porywy wiatru: " + wartoscWiatru + Ustawienia.jednostkaWiatru();
-            tytulZnacznika = temperaturaTekst + "\n" + opadyTekst + "\n" + porywyWiatryTekst;
-
-            warunkiPogodowe.put("temperatura", temperaturaTekst);
-            warunkiPogodowe.put("opady", opadyTekst);
-            warunkiPogodowe.put("porywy_wiatru", porywyWiatryTekst);
+            warunkiPogodowe.put("temperatura", danePogodowe.get(3));
+            warunkiPogodowe.put("opady", danePogodowe.get(1));
+            warunkiPogodowe.put("porywy_wiatru", danePogodowe.get(9));
             warunkiPogodowe.put("indeks_obrazka", indeksObrazka);
         }
         znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
@@ -435,7 +436,7 @@ public class Trasa {
         mapa.invalidate();
     }
 
-    public int pobierzIndeksObrazka(Double wiatr, Double opady, String kodPogodowy) {
+    public int pobierzIndeksObrazka(String kodPogodowy) {
         switch (kodPogodowy) {
             case "freezing_rain_heavy":
             case "freezing_rain":
@@ -452,13 +453,7 @@ public class Trasa {
             case "flurries":
                 return R.drawable.winter;
             case "tstorm":
-                if (wiatr <= 10 && opady <= 1) {
-                    return R.drawable.thunderstorm;
-                } else if (opady > 1) {
-                    return R.drawable.storm2;
-                } else if (wiatr > 10) {
-                    return R.drawable.storm;
-                }
+                return R.drawable.storm2;
             case "rain_heavy":
                 return R.drawable.rain2;
             case "rain":
