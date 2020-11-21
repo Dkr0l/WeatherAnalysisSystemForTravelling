@@ -377,8 +377,8 @@ public class Trasa {
             if(Ustawienia.wyswietlicCisnienie())tytulZnacznika+=danePogodowe.get(6)+"\n";
             if(Ustawienia.wyswietlicWiatrKierunek())tytulZnacznika+=danePogodowe.get(7)+"\n";
             if(Ustawienia.wyswietlicWilgotnosc())tytulZnacznika+=danePogodowe.get(8)+"\n";
-            if(Ustawienia.wyswietlicWiatrWPorywach())tytulZnacznika+=danePogodowe.get(9)+"\n";
-            if(Ustawienia.wyswietlicZachmurzenie())tytulZnacznika+=danePogodowe.get(10)+"\n";
+            if(Ustawienia.wyswietlicWiatrWPorywach() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(9)+"\n";
+            if(Ustawienia.wyswietlicZachmurzenie() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(10)+"\n";
 
             warunkiPogodowe.put("temperatura", danePogodowe.get(3));
             warunkiPogodowe.put("opady", danePogodowe.get(1));

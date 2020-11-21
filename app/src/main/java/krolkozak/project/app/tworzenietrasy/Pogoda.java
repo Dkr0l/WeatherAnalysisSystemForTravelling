@@ -55,17 +55,17 @@ public class Pogoda {
             typPrognozy="hourly";
             try {
                 String pogodaURL = "https://api.climacell.co/v3/weather/forecast/hourly?lat=" + szerGeog + "&lon=" + dlugGeog + "&unit_system=si&start_time=" + dataISO + "&end_time=" + dataISO + "&fields=";
-                if(Ustawienia.wyswietlicTemp())pogodaURL.concat("temp%2C");
-                if(Ustawienia.wyswietlicTempOdczuwalna())pogodaURL.concat("feels_like%2C");
-                if(Ustawienia.wyswietlicCisnienie())pogodaURL.concat("baro_pressure%2C");
-                if(Ustawienia.wyswietlicOpadyIntensywnosc() || Ustawienia.wyswietlicOpadySzansa())pogodaURL.concat("precipitation%2C");
-                if(Ustawienia.wyswietlicOpadySzansa())pogodaURL.concat("precipitation_probability%2C");
-                if(Ustawienia.wyswietlicWiatrKierunek())pogodaURL.concat("wind_direction%2C");
-                if(Ustawienia.wyswietlicWiatrSr())pogodaURL.concat("wind_speed%2C");
-                if(Ustawienia.wyswietlicWiatrWPorywach())pogodaURL.concat("wind_gust%2C");
-                if(Ustawienia.wyswietlicWilgotnosc())pogodaURL.concat("humidity%2C");
-                if(Ustawienia.wyswietlicZachmurzenie())pogodaURL.concat("cloud_cover%2C");
-                pogodaURL.concat("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
+                if(Ustawienia.wyswietlicTemp())pogodaURL+=("temp%2C");
+                if(Ustawienia.wyswietlicTempOdczuwalna())pogodaURL+=("feels_like%2C");
+                if(Ustawienia.wyswietlicCisnienie())pogodaURL+=("baro_pressure%2C");
+                if(Ustawienia.wyswietlicOpadyIntensywnosc() || Ustawienia.wyswietlicOpadySzansa())pogodaURL+=("precipitation%2C");
+                if(Ustawienia.wyswietlicOpadySzansa())pogodaURL+=("precipitation_probability%2C");
+                if(Ustawienia.wyswietlicWiatrKierunek())pogodaURL+=("wind_direction%2C");
+                if(Ustawienia.wyswietlicWiatrSr())pogodaURL+=("wind_speed%2C");
+                if(Ustawienia.wyswietlicWiatrWPorywach())pogodaURL+=("wind_gust%2C");
+                if(Ustawienia.wyswietlicWilgotnosc())pogodaURL+=("humidity%2C");
+                if(Ustawienia.wyswietlicZachmurzenie())pogodaURL+=("cloud_cover%2C");
+                pogodaURL+=("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
                 Log.i(nazwaApki, "climacell url: " + pogodaURL);
 
                 // przypisanie wyniku zapytania do zmiennej
@@ -79,15 +79,15 @@ public class Pogoda {
             typPrognozy="daily";
             try {
                 String pogodaURL = "https://api.climacell.co/v3/weather/forecast/daily?lat=" + szerGeog + "&lon=" + dlugGeog + "&unit_system=si&start_time=" + dataISO + "&end_time=" + dataISO + "&fields=";
-                if(Ustawienia.wyswietlicTemp())pogodaURL.concat("temp%2C");
-                if(Ustawienia.wyswietlicTempOdczuwalna())pogodaURL.concat("feels_like%2C");
-                if(Ustawienia.wyswietlicCisnienie())pogodaURL.concat("baro_pressure%2C");
-                if(Ustawienia.wyswietlicOpadyIntensywnosc() || Ustawienia.wyswietlicOpadySzansa())pogodaURL.concat("precipitation%2C");
-                if(Ustawienia.wyswietlicOpadySzansa())pogodaURL.concat("precipitation_probability%2C");
-                if(Ustawienia.wyswietlicWiatrKierunek())pogodaURL.concat("wind_direction%2C");
-                if(Ustawienia.wyswietlicWiatrSr())pogodaURL.concat("wind_speed%2C");
-                if(Ustawienia.wyswietlicWilgotnosc())pogodaURL.concat("humidity%2C");
-                pogodaURL.concat("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
+                if(Ustawienia.wyswietlicTemp())pogodaURL+=("temp%2C");
+                if(Ustawienia.wyswietlicTempOdczuwalna())pogodaURL+=("feels_like%2C");
+                if(Ustawienia.wyswietlicCisnienie())pogodaURL+=("baro_pressure%2C");
+                if(Ustawienia.wyswietlicOpadyIntensywnosc() || Ustawienia.wyswietlicOpadySzansa())pogodaURL+=("precipitation%2C");
+                if(Ustawienia.wyswietlicOpadySzansa())pogodaURL+=("precipitation_probability%2C");
+                if(Ustawienia.wyswietlicWiatrKierunek())pogodaURL+=("wind_direction%2C");
+                if(Ustawienia.wyswietlicWiatrSr())pogodaURL+=("wind_speed%2C");
+                if(Ustawienia.wyswietlicWilgotnosc())pogodaURL+=("humidity%2C");
+                pogodaURL+=("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
                 Log.i(nazwaApki, "climacell url: " + pogodaURL);
 
                 // przypisanie wyniku zapytania do zmiennej
