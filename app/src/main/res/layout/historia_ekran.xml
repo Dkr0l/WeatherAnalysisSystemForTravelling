@@ -33,4 +33,35 @@
         android:layout_marginTop="10dp"
         android:layout_weight="9999" />
 
+    <LinearLayout
+        android:id="@+id/historiaLayoutDolny"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/historiaTekstInfo2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Wprowadź numer rekordu:" />
+
+        <EditText
+            android:id="@+id/historiaNumerRekordu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/historiaUsunRekordPrzycisk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="USUŃ REKORD" />
+    </LinearLayout>
+
 </LinearLayout>

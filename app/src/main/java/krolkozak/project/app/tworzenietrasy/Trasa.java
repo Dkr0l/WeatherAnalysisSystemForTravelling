@@ -348,7 +348,6 @@ public class Trasa {
     // podanych koordynatów geograficznych oraz daty przybycia na miejsce
     public void dodajPunktPogodowy(Double szerGeog, Double dlugGeog, OffsetDateTime data, Context kontekst, int oznaczenieKolejnosciPunktu) throws IOException, JSONException {
         JSONObject obiektPogodowy = new JSONObject();
-        JSONObject warunkiPogodowe = new JSONObject();
 
         // -------------- POBRANIE DANYCH O POGODZIE W DANYM CZASIE --------------
         List danePogodowe = pogoda.pobierzPogode(szerGeog, dlugGeog, data.toString().substring(0, 16) + "Z");
@@ -379,11 +378,6 @@ public class Trasa {
             if(Ustawienia.wyswietlicWilgotnosc())tytulZnacznika+=danePogodowe.get(8)+"\n";
             if(Ustawienia.wyswietlicWiatrWPorywach() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(9)+"\n";
             if(Ustawienia.wyswietlicZachmurzenie() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(10)+"\n";
-
-            warunkiPogodowe.put("temperatura", danePogodowe.get(3));
-            warunkiPogodowe.put("opady", danePogodowe.get(1));
-            warunkiPogodowe.put("porywy_wiatru", danePogodowe.get(9));
-            warunkiPogodowe.put("indeks_obrazka", indeksObrazka);
         }
         znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
         znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
@@ -415,7 +409,8 @@ public class Trasa {
             obiektPogodowy.put("koordynaty", koordynaty);
             obiektPogodowy.put("lokalizacja", nazwaLokacji);
             obiektPogodowy.put("czas", pelnaData);
-            obiektPogodowy.put("warunki", warunkiPogodowe);
+            obiektPogodowy.put("tytul_znacznika", tytulZnacznika);
+            obiektPogodowy.put("indeks_obrazka", indeksObrazka);
 
             if (oznaczenieKolejnosciPunktu == 1) {
                 lokalizacja_poczatkowa = nazwaLokacji;

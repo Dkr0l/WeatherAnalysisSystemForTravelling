@@ -32,6 +32,13 @@ import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
+/*
+
+TODO:
+ - dodać przeliczanie na jednostki wybrane z ustawień
+
+*/
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MapaHistoria extends Activity {
     private Historia dokumentHistorii;
@@ -97,19 +104,8 @@ public class MapaHistoria extends Activity {
             double dlugGeog = koordynaty.getDouble("dlug_geog");
             GeoPoint punktGeog = new GeoPoint(szerGeog, dlugGeog);
 
-            JSONObject warunki = (JSONObject) obiektPogodowy.get("warunki");
-
-            String tytulZnacznika = "Błąd pogody.";
-            int indeksObrazka = R.drawable.marker_default;
-            if (warunki.has("temperatura") && warunki.has("opady") && warunki.has("porywy_wiatru") && warunki.has("indeks_obrazka")) {
-                String temperatura = warunki.getString("temperatura");
-                String opady = warunki.getString("opady");
-                String porywyWiatru = warunki.getString("porywy_wiatru");
-
-                tytulZnacznika = temperatura + "\n" + opady + "\n" + porywyWiatru;
-
-                indeksObrazka = warunki.getInt("indeks_obrazka");
-            }
+            String tytulZnacznika = obiektPogodowy.getString("tytul_znacznika");
+            int indeksObrazka = obiektPogodowy.getInt("indeks_obrazka");
 
             String lokalizacja = obiektPogodowy.getString("lokalizacja");
             String czas = obiektPogodowy.getString("czas");

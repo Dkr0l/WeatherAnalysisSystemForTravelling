@@ -1,6 +1,8 @@
 package krolkozak.project.app.pomocnicze;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.util.Log;
 
@@ -19,8 +21,11 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.ArrayList;
+
+import krolkozak.project.app.Ustawienia;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
@@ -31,6 +36,10 @@ public class WyswietlanieMapy {
         mapa.invalidate();
 
         mapa.setTileSource(TileSourceFactory.MAPNIK);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q && Ustawienia.trybCiemnyAktywny()) {
+            wlaczCiemnyTrybMapy(mapa);
+        }
 
         mapa.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         mapa.setMultiTouchControls(true);
@@ -62,6 +71,31 @@ public class WyswietlanieMapy {
         mapa.getOverlays().add(znacznik);
 
         mapa.invalidate();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static void wlaczCiemnyTrybMapy(MapView mapa) {
+        TilesOverlay plytkiMapy = mapa.getOverlayManager().getTilesOverlay();
+
+        /*  4x5 matrix for transforming the color and alpha components of a Bitmap. The matrix can be passed as single array, and is treated as follows:
+          [ a, b, c, d, e,
+            f, g, h, i, j,
+            k, l, m, n, o,
+            p, q, r, s, t ]
+        When applied to a color [R, G, B, A], the resulting color is computed as:
+           R’ = a*R + b*G + c*B + d*A + e;
+           G’ = f*R + g*G + h*B + i*A + j;
+           B’ = k*R + l*G + m*B + n*A + o;
+           A’ = p*R + q*G + r*B + s*A + t;      */
+
+        float[] matrycaKolorow = {
+                0, -1, -1, 0, 460, // Czerwony
+                -1, 0, -1, 0, 460, // Zielony
+                -1, -1, 0, 0, 460, // Niebieski
+                0, 0, 0, 1, 0      //alpha (nie tykać!!)
+        };
+
+        plytkiMapy.setColorFilter(new ColorMatrixColorFilter(new ColorMatrix(matrycaKolorow)));
     }
 
     public static ArrayList<GeoPoint> wyswietlTraseNaMapie(MapView mapa, String punktyTrasy, String typTrasy) throws JSONException {
