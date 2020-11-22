@@ -3,21 +3,18 @@ package krolkozak.project.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Spinner;
 import android.widget.Switch;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.Map;
 
 import krolkozak.project.app.ekrany.Menu;
 
-/*
-
-TODO:
-    - dodać możliwość przewijania
-
-*/
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Ustawienia extends Activity {
 
     //elementy interfejsu

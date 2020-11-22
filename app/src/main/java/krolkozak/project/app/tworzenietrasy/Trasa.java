@@ -39,8 +39,9 @@ import java.util.List;
 
 import krolkozak.project.app.InterfejsAPI;
 import krolkozak.project.app.R;
-import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.bazadanych.Historia;
+
+import static krolkozak.project.app.pomocnicze.WyswietlanieMapy.pobierzTytulZnacznika;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Trasa {
@@ -128,7 +129,8 @@ public class Trasa {
             String koordynaty2 = szerGeog2 + "," + dlugGeog2;
 
             //domyślny środek transportu (jeżeli żaden nie został wybrany)
-            if(srodek_transportu==null)srodek_transportu="\uD83D\uDE97 samochód: najszybsza trasa";
+            if (srodek_transportu == null)
+                srodek_transportu = "\uD83D\uDE97 samochód: najszybsza trasa";
 
             switch (srodek_transportu) {
                 case "\uD83D\uDE97 samochód: najszybsza trasa":
@@ -254,7 +256,7 @@ public class Trasa {
             punkty.add(new GeoPoint(szerGeog1, dlugGeog1));
             for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
                 PunktPostoju obecnyPrzystanek;
-                if(numOdcinka<przystanki.size()) {
+                if (numOdcinka < przystanki.size()) {
                     obecnyPrzystanek = przystanki.get(numOdcinka);
                     punkty.add(new GeoPoint(obecnyPrzystanek.getSzerGeog(), obecnyPrzystanek.getDlugGeog()));
                 }
@@ -360,25 +362,14 @@ public class Trasa {
 
         // -------------- SFORMATOWANIE DANYCH O POGODZIE I WYSWIETLENIE --------------
         // sformatowanie parametrów pogody oraz wyświetlenie ich jako tytuł
-        String tytulZnacznika = "Wystąpił błąd.";
 
-        int indeksObrazka=R.drawable.error;
+        int indeksObrazka = R.drawable.error;
         if (danePogodowe != null) {
-             indeksObrazka = pobierzIndeksObrazka((String) danePogodowe.get(0));
-
-            tytulZnacznika ="";
-            if(Ustawienia.wyswietlicOpadyIntensywnosc())tytulZnacznika+=danePogodowe.get(1)+"\n";
-            if(Ustawienia.wyswietlicOpadySzansa() && !Pogoda.typPrognozy.equals("nowcast"))tytulZnacznika+=danePogodowe.get(2)+"\n";
-            else if(Ustawienia.wyswietlicOpadySzansa() && Pogoda.typPrognozy.equals("nowcast") && !Ustawienia.wyswietlicOpadyIntensywnosc())tytulZnacznika+=danePogodowe.get(1)+"\n";
-            if(Ustawienia.wyswietlicTemp())tytulZnacznika+=danePogodowe.get(3)+"\n";
-            if(Ustawienia.wyswietlicTempOdczuwalna())tytulZnacznika+=danePogodowe.get(4)+"\n";
-            if(Ustawienia.wyswietlicWiatrSr())tytulZnacznika+=danePogodowe.get(5)+"\n";
-            if(Ustawienia.wyswietlicCisnienie())tytulZnacznika+=danePogodowe.get(6)+"\n";
-            if(Ustawienia.wyswietlicWiatrKierunek())tytulZnacznika+=danePogodowe.get(7)+"\n";
-            if(Ustawienia.wyswietlicWilgotnosc())tytulZnacznika+=danePogodowe.get(8)+"\n";
-            if(Ustawienia.wyswietlicWiatrWPorywach() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(9)+"\n";
-            if(Ustawienia.wyswietlicZachmurzenie() && !Pogoda.typPrognozy.equals("daily"))tytulZnacznika+=danePogodowe.get(10)+"\n";
+            indeksObrazka = pobierzIndeksObrazka((String) danePogodowe.get(0));
         }
+
+        String tytulZnacznika = pobierzTytulZnacznika(danePogodowe, Pogoda.typPrognozy);
+
         znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
         znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
         znacznik.setTitle(tytulZnacznika);
@@ -409,7 +400,8 @@ public class Trasa {
             obiektPogodowy.put("koordynaty", koordynaty);
             obiektPogodowy.put("lokalizacja", nazwaLokacji);
             obiektPogodowy.put("czas", pelnaData);
-            obiektPogodowy.put("tytul_znacznika", tytulZnacznika);
+            obiektPogodowy.put("pogoda_odpowiedz_api", Pogoda.pogodaOdpowiedzApiTekst);
+            obiektPogodowy.put("typ_prognozy", Pogoda.typPrognozy);
             obiektPogodowy.put("indeks_obrazka", indeksObrazka);
 
             if (oznaczenieKolejnosciPunktu == 1) {

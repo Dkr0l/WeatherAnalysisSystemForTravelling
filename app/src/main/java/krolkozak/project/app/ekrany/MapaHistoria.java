@@ -32,13 +32,6 @@ import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
-/*
-
-TODO:
- - dodać przeliczanie na jednostki wybrane z ustawień
-
-*/
-
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MapaHistoria extends Activity {
     private Historia dokumentHistorii;
@@ -104,14 +97,16 @@ public class MapaHistoria extends Activity {
             double dlugGeog = koordynaty.getDouble("dlug_geog");
             GeoPoint punktGeog = new GeoPoint(szerGeog, dlugGeog);
 
-            String tytulZnacznika = obiektPogodowy.getString("tytul_znacznika");
             int indeksObrazka = obiektPogodowy.getInt("indeks_obrazka");
+
+            String pogodaOdpowiedzApi = obiektPogodowy.getString("pogoda_odpowiedz_api");
+            String typPrognozy = obiektPogodowy.getString("typ_prognozy");
 
             String lokalizacja = obiektPogodowy.getString("lokalizacja");
             String czas = obiektPogodowy.getString("czas");
             String opisZnacznika = lokalizacja + "<br>" + czas;
 
-            WyswietlanieMapy.wyswietlZnacznikNaMapie(kontekst, mapaHistoriaWidok, punktGeog, tytulZnacznika, opisZnacznika, indeksObrazka);
+            WyswietlanieMapy.wyswietlZnacznikNaMapie(kontekst, mapaHistoriaWidok, punktGeog, pogodaOdpowiedzApi, typPrognozy, opisZnacznika, indeksObrazka);
         }
     }
 

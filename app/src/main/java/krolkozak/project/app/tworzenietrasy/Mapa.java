@@ -27,7 +27,7 @@ import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
 /*
 
 TODO:
-    - dodać wyświetlanie informacji o aktualnej trasie
+ - dodać wyświetlanie informacji o aktualnej trasie
 
 */
 

@@ -2,247 +2,260 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/darkModeBackground"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <Switch
-            android:id="@+id/ustawieniaTrybCiemny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingHorizontal="50dp"
-            android:textColor="@color/darkModeText"
-            android:text="Tryb ciemny" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/darkModePrimary"
-            android:text="Preferowane jednostki" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:textColor="@color/darkModeText"
-                android:text="intensywności opadów" />
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-            <Spinner
-                android:id="@+id/ustawieniaJednostkaOpadow"
+                <Switch
+                    android:id="@+id/ustawieniaTrybCiemny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="50dp"
+                    android:text="Tryb ciemny"
+                    android:textColor="@color/darkModeText" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Preferowane jednostki"
+                    android:textColor="@color/darkModePrimary" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="50dp"
+                        android:text="intensywności opadów"
+                        android:textColor="@color/darkModeText" />
+
+                    <Spinner
+                        android:id="@+id/ustawieniaJednostkaOpadow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/jednostki_opadow"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/darkModeText"
+                        android:theme="@style/AppTheme.DarkElementTheme" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="50dp"
+                        android:text="prędkości wiatru"
+                        android:textColor="@color/darkModeText" />
+
+                    <Spinner
+                        android:id="@+id/ustawieniaJednostkaPredkosciWiatru"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/jednostki_predkosci_wiatru"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/darkModeText"
+                        android:theme="@style/AppTheme.DarkElementTheme" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="50dp"
+                        android:text="temperatury"
+                        android:textColor="@color/darkModeText" />
+
+                    <Spinner
+                        android:id="@+id/ustawieniaJednostkaTemperatury"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/jednostki_temperatury"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/darkModeText"
+                        android:theme="@style/AppTheme.DarkElementTheme" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="50dp"
+                        android:text="ciśnienia atmosferycznego"
+                        android:textColor="@color/darkModeText" />
+
+                    <Spinner
+                        android:id="@+id/ustawieniaJednostkaCisnieniaAtm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/jednostki_cisnienia"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/darkModeText"
+                        android:theme="@style/AppTheme.DarkElementTheme" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Informacje do wyświetlenia na mapie"
+                    android:textColor="@color/darkModePrimary" />
+
+                <Switch
+                    android:id="@+id/przelacznikTemperatura"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Temperatura"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikTemperaturaOdczuwalna"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Temperatura odczuwalna"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikIntensywnoscOpadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Intensywność opadów"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikPrawdopodobienstwoOpadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Prawdopodobieństwo wystąpienia opadów"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikWilgotnosc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Wilgotność"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikPredkascWiatruSr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Prędkość wiatru średnia"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikPredkascWiatruPor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Prędkość wiatru w porywach"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikKierunekWiatru"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Kierunek wiatru"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikCisnienieAtm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Ciśnienie atmosferyczne"
+                    android:textColor="@color/darkModeText" />
+
+                <Switch
+                    android:id="@+id/przelacznikZachmurzenie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingHorizontal="50dp"
+                    android:text="Zachmurzenie"
+                    android:textColor="@color/darkModeText" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/jednostki_opadow"
-                android:textColor="@color/darkModeText"
-                android:theme="@style/AppTheme.DarkElementTheme"
-                android:paddingLeft="10dp" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/zatwierdzUstawienia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ZASTOSUJ" />
+            </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:textColor="@color/darkModeText"
-                android:text="prędkości wiatru" />
-
-            <Spinner
-                android:id="@+id/ustawieniaJednostkaPredkosciWiatru"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/jednostki_predkosci_wiatru"
-                android:textColor="@color/darkModeText"
-                android:theme="@style/AppTheme.DarkElementTheme"
-                android:paddingLeft="10dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:textColor="@color/darkModeText"
-                android:text="temperatury" />
-
-            <Spinner
-                android:id="@+id/ustawieniaJednostkaTemperatury"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/jednostki_temperatury"
-                android:textColor="@color/darkModeText"
-                android:theme="@style/AppTheme.DarkElementTheme"
-                android:paddingLeft="10dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:textColor="@color/darkModeText"
-                android:text="ciśnienia atmosferycznego" />
-
-            <Spinner
-                android:id="@+id/ustawieniaJednostkaCisnieniaAtm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/jednostki_cisnienia"
-                android:textColor="@color/darkModeText"
-                android:theme="@style/AppTheme.DarkElementTheme"
-                android:paddingLeft="10dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/darkModePrimary"
-            android:text="Informacje do wyświetlenia na mapie" />
-
-        <Switch
-            android:id="@+id/przelacznikTemperatura"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Temperatura" />
-
-        <Switch
-            android:id="@+id/przelacznikTemperaturaOdczuwalna"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Temperatura odczuwalna" />
-
-        <Switch
-            android:id="@+id/przelacznikIntensywnoscOpadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Intensywność opadów" />
-
-        <Switch
-            android:id="@+id/przelacznikPrawdopodobienstwoOpadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Prawdopodobieństwo wystąpienia opadów" />
-
-        <Switch
-            android:id="@+id/przelacznikWilgotnosc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Wilgotność" />
-
-        <Switch
-            android:id="@+id/przelacznikPredkascWiatruSr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Prędkość wiatru średnia" />
-
-        <Switch
-            android:id="@+id/przelacznikPredkascWiatruPor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Prędkość wiatru w porywach" />
-
-        <Switch
-            android:id="@+id/przelacznikKierunekWiatru"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Kierunek wiatru" />
-
-        <Switch
-            android:id="@+id/przelacznikCisnienieAtm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Ciśnienie atmosferyczne" />
-
-        <Switch
-            android:id="@+id/przelacznikZachmurzenie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:layout_margin="5dp"
-            android:textColor="@color/darkModeText"
-            android:text="Zachmurzenie" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/zatwierdzUstawienia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ZASTOSUJ" />
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

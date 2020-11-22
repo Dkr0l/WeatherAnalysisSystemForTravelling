@@ -37,6 +37,7 @@ import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 /*
 
 TODO:
+ - dodać tryb ciemny
  - dodać przycisk do wprowadzenia danych wybranej trasy z historii do widoku tworzenia trasy
 
 */

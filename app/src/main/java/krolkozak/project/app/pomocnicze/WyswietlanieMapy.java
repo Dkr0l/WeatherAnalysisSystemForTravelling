@@ -24,6 +24,7 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import krolkozak.project.app.Ustawienia;
 
@@ -56,7 +57,7 @@ public class WyswietlanieMapy {
         kontrolerMapy.setCenter(punktPoczatkowyMapy);
     }
 
-    public static void wyswietlZnacznikNaMapie(Context kontekst, MapView mapa, GeoPoint punktGeog, String tytulZnacznika, String opisZnacznika, int indeksObrazka) {
+    public static void wyswietlZnacznikNaMapie(Context kontekst, MapView mapa, GeoPoint punktGeog, String pogodaOdpowiedzApi, String typPrognozy, String opisZnacznika, int indeksObrazka) {
         Marker znacznik = new Marker(mapa);
 
         znacznik.setPosition(punktGeog);
@@ -64,6 +65,10 @@ public class WyswietlanieMapy {
 
         znacznik.setIcon(kontekst.getApplicationContext().getDrawable(indeksObrazka));
         znacznik.setImage(kontekst.getApplicationContext().getDrawable(indeksObrazka));
+
+        List danePogodowe = PobieranieDanychPogody.danePogodowe(new StringBuffer(pogodaOdpowiedzApi), typPrognozy);
+
+        String tytulZnacznika = pobierzTytulZnacznika(danePogodowe, typPrognozy);
 
         znacznik.setTitle(tytulZnacznika);
         znacznik.setSubDescription(opisZnacznika);
@@ -73,7 +78,33 @@ public class WyswietlanieMapy {
         mapa.invalidate();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static String pobierzTytulZnacznika(List danePogodowe, String typPrognozy) {
+        String tytulZnacznika = "Wystąpił błąd.";
+
+        if (danePogodowe != null) {
+            tytulZnacznika = "";
+
+            if (Ustawienia.wyswietlicOpadyIntensywnosc())
+                tytulZnacznika += danePogodowe.get(1) + "\n";
+            if (Ustawienia.wyswietlicOpadySzansa() && !typPrognozy.equals("nowcast"))
+                tytulZnacznika += danePogodowe.get(2) + "\n";
+            else if (Ustawienia.wyswietlicOpadySzansa() && typPrognozy.equals("nowcast") && !Ustawienia.wyswietlicOpadyIntensywnosc())
+                tytulZnacznika += danePogodowe.get(1) + "\n";
+            if (Ustawienia.wyswietlicTemp()) tytulZnacznika += danePogodowe.get(3) + "\n";
+            if (Ustawienia.wyswietlicTempOdczuwalna()) tytulZnacznika += danePogodowe.get(4) + "\n";
+            if (Ustawienia.wyswietlicWiatrSr()) tytulZnacznika += danePogodowe.get(5) + "\n";
+            if (Ustawienia.wyswietlicCisnienie()) tytulZnacznika += danePogodowe.get(6) + "\n";
+            if (Ustawienia.wyswietlicWiatrKierunek()) tytulZnacznika += danePogodowe.get(7) + "\n";
+            if (Ustawienia.wyswietlicWilgotnosc()) tytulZnacznika += danePogodowe.get(8) + "\n";
+            if (Ustawienia.wyswietlicWiatrWPorywach() && !typPrognozy.equals("daily"))
+                tytulZnacznika += danePogodowe.get(9) + "\n";
+            if (Ustawienia.wyswietlicZachmurzenie() && !typPrognozy.equals("daily"))
+                tytulZnacznika += danePogodowe.get(10) + "\n";
+        }
+
+        return tytulZnacznika;
+    }
+
     public static void wlaczCiemnyTrybMapy(MapView mapa) {
         TilesOverlay plytkiMapy = mapa.getOverlayManager().getTilesOverlay();
 

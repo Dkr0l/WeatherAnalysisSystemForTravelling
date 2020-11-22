@@ -1,113 +1,29 @@
-package krolkozak.project.app.tworzenietrasy;
+package krolkozak.project.app.pomocnicze;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 
-import krolkozak.project.app.InterfejsAPI;
 import krolkozak.project.app.Ustawienia;
 
-public class Pogoda {
-    // czas do przyjazdu do celu podróży
-    protected int czasDoPrzyjazdu;
-    // pomocnicza nazwa aplikacji do debuggowania
-    private final String nazwaApki = "TRAVEL_APP";
-    protected static String typPrognozy;
-    protected static String pogodaOdpowiedzApiTekst = "";
+import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
-    // -------------- POBRANIE POGODY W DANYM PUNKCIE --------------
-    // metoda pobierająca informacje o pogodzie dla danego punktu geograficznego w określonym czasie
-    public List pobierzPogode(double szerGeog, double dlugGeog, String dataISO) {
-        StringBuffer pogodaOdpowiedzAPI = new StringBuffer();
-
-        if (czasDoPrzyjazdu <= 21600) {
-            // -------------- JESLI CZAS PODROZY JEST MNIEJSZY NIZ 6H POGODA BEDZIE POKAZYWANA NIE CZĘŚCIEJ NIŻ CO 30 MINNUT --------------
-            typPrognozy = "nowcast";
-            try {
-                String pogodaURL = "https://api.climacell.co/v3/weather/nowcast?lat=" + szerGeog + "&lon=" + dlugGeog + "&unit_system=si&start_time=" + dataISO + "&end_time=" + dataISO + "&fields=";
-                pogodaURL += ("temp%2C");
-                pogodaURL += ("feels_like%2C");
-                pogodaURL += ("baro_pressure%2C");
-                pogodaURL += ("precipitation%2C");
-                pogodaURL += ("wind_direction%2C");
-                pogodaURL += ("wind_speed%2C");
-                pogodaURL += ("wind_gust%2C");
-                pogodaURL += ("humidity%2C");
-                pogodaURL += ("cloud_cover%2C");
-                pogodaURL += ("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
-                Log.i(nazwaApki, "climacell url: " + pogodaURL);
-
-                // przypisanie wyniku zapytania do zmiennej
-                pogodaOdpowiedzAPI = InterfejsAPI.pobierzOdpowiedzAPI(pogodaURL);
-            } catch (IOException e) {
-                Log.i(nazwaApki, "Blad pogody: " + e.getMessage());
-            }
-
-        } else if (czasDoPrzyjazdu <= 388800) {
-            // -------------- JESLI CZAS PODROZY JEST MNIEJSZY NIZ 108H POGODA BEDZIE POKAZYWANA NIE CZĘŚCIEJ NIŻ CO GODZINĘ --------------
-            typPrognozy = "hourly";
-            try {
-                String pogodaURL = "https://api.climacell.co/v3/weather/forecast/hourly?lat=" + szerGeog + "&lon=" + dlugGeog + "&unit_system=si&start_time=" + dataISO + "&end_time=" + dataISO + "&fields=";
-                pogodaURL += ("temp%2C");
-                pogodaURL += ("feels_like%2C");
-                pogodaURL += ("baro_pressure%2C");
-                pogodaURL += ("precipitation%2C");
-                pogodaURL += ("precipitation_probability%2C");
-                pogodaURL += ("wind_direction%2C");
-                pogodaURL += ("wind_speed%2C");
-                pogodaURL += ("wind_gust%2C");
-                pogodaURL += ("humidity%2C");
-                pogodaURL += ("cloud_cover%2C");
-                pogodaURL += ("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
-                Log.i(nazwaApki, "climacell url: " + pogodaURL);
-
-                // przypisanie wyniku zapytania do zmiennej
-                pogodaOdpowiedzAPI = InterfejsAPI.pobierzOdpowiedzAPI(pogodaURL);
-            } catch (IOException e) {
-                // jeśli nie uda się wykonać zapytania - aplikacja wyrzuci wyjatek
-                Log.i(nazwaApki, "Blad pogody: " + e.getMessage());
-            }
-        } else {
-            // -------------- JESLI CZAS PODROZY JEST MNIEJSZY NIZ 15 DNI POGODA BEDZIE POKAZYWANA NIE CZĘŚCIEJ NIŻ CO 1 DZIEŃ --------------
-            typPrognozy = "daily";
-            try {
-                String pogodaURL = "https://api.climacell.co/v3/weather/forecast/daily?lat=" + szerGeog + "&lon=" + dlugGeog + "&unit_system=si&start_time=" + dataISO + "&end_time=" + dataISO + "&fields=";
-                pogodaURL += ("temp%2C");
-                pogodaURL += ("feels_like%2C");
-                pogodaURL += ("baro_pressure%2C");
-                pogodaURL += ("precipitation%2C");
-                pogodaURL += ("precipitation_probability%2C");
-                pogodaURL += ("wind_direction%2C");
-                pogodaURL += ("wind_speed%2C");
-                pogodaURL += ("humidity%2C");
-                pogodaURL += ("weather_code&apikey=IkbL8JOHgt5iGVzsjCWtAMcwgUs4KGoM");
-                Log.i(nazwaApki, "climacell url: " + pogodaURL);
-
-                // przypisanie wyniku zapytania do zmiennej
-                pogodaOdpowiedzAPI = InterfejsAPI.pobierzOdpowiedzAPI(pogodaURL);
-            } catch (IOException e) {
-                // jeśli nie uda się wykonać zapytania - aplikacja wyrzuci wyjatek
-                Log.i(nazwaApki, "Blad pogody: " + e.getMessage());
-            }
-        }
-
-        pogodaOdpowiedzApiTekst = String.valueOf(pogodaOdpowiedzAPI);
-
-        // zwrócenie metody, która sformatuje wynik zapytania w listę, którą będzie łatwo wyświetlić
-        return danePogodowe(pogodaOdpowiedzAPI);
-    }
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class PobieranieDanychPogody {
 
     // -------------- PRZETWORZENIE DANYCH O POGODZIE --------------
     // metoda, która formatuje wynik zapytania w listę, którą będzie łatwo wyświetlić
-    public List danePogodowe(StringBuffer odpowiedz) {
+    public static List danePogodowe(StringBuffer odpowiedz, String typPrognozy) {
         String opady = null;
         String opadySzansa = null;
         String temperatura = null;
@@ -280,15 +196,6 @@ public class Pogoda {
         }
 
         return dane;
-    }
-
-    // -------------- CZAS PO KTORYM POBIERANA JEST POGODA --------------
-    // metoda, która wyznacza długość odstępu pomiędzy kolejnymi punktami na trasie
-    public int wyznaczDlugoscOdstepu() {
-        // ograniczenia nałożone przez API pogody (climacell.co)
-        if (czasDoPrzyjazdu <= 21600) return 1800;   //do 6 godz, pogoda co pół godziny
-        else if (czasDoPrzyjazdu <= 388800) return 3600; //do 108 godz, pogoda co godzinę
-        else return 86400;  //do 15 dni, pogoda co 1 dzień
     }
 
 }
