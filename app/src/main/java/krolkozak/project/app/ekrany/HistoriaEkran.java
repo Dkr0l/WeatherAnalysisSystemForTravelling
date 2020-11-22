@@ -3,15 +3,17 @@ package krolkozak.project.app.ekrany;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +25,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.listeners.TableDataClickListener;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import krolkozak.project.app.R;
+import krolkozak.project.app.Ustawienia;
 import krolkozak.project.app.bazadanych.Historia;
 import krolkozak.project.app.pomocnicze.RekordTabeliHistoria;
 
@@ -37,8 +37,8 @@ import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 /*
 
 TODO:
- - dodać tryb ciemny
  - dodać przycisk do wprowadzenia danych wybranej trasy z historii do widoku tworzenia trasy
+ - podzielić historie na strony (jakby któryś użytkownik nabił 3k rekordów w historii :D )
 
 */
 
@@ -48,35 +48,33 @@ public class HistoriaEkran extends Activity {
     private ArrayList<Historia> dokumentyHistorii;
     private ArrayList<String> idDokumentowHistorii;
     private TextView historiaTekstInfo;
-    private String[] naglowkiTabeliHistorii = {"LP", "START", "KONIEC", "DATA"};
-    private String[][] rekordyTabeliHistorii;
-    private TableView<String[]> tabelaHistoria;
+    private TableLayout tabelaHistoria;
     private TextView historiaTekstInfo2;
     private EditText historiaNumerRekordu;
-    private Button historiaUsunRekordPrzycisk;
     private LinearLayout historiaLayoutDolny;
-    private boolean dodanoNasluchiwaczKlieknieciaRekordu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.historia_ekran);
+        if (Ustawienia.trybCiemnyAktywny()) {
+            setContentView(R.layout.trybciemnyhistoria_ekran);
+        } else {
+            setContentView(R.layout.historia_ekran);
+        }
 
-        idUzytkownika = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dokumentyHistorii = new ArrayList<Historia>();
-        idDokumentowHistorii = new ArrayList<String>();
+        idUzytkownika = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        dokumentyHistorii = new ArrayList<>();
+        idDokumentowHistorii = new ArrayList<>();
         historiaTekstInfo = (TextView) findViewById(R.id.historiaTekstInfo);
-        tabelaHistoria = (TableView<String[]>) findViewById(R.id.historiaTabela);
+        tabelaHistoria = findViewById(R.id.historiaTabela);
         tabelaHistoria.setVisibility(View.INVISIBLE);
 
         historiaLayoutDolny = (LinearLayout) findViewById(R.id.historiaLayoutDolny);
         historiaLayoutDolny.setVisibility(View.INVISIBLE);
 
         historiaNumerRekordu = (EditText) findViewById(R.id.historiaNumerRekordu);
-        historiaUsunRekordPrzycisk = (Button) findViewById(R.id.historiaUsunRekordPrzycisk);
+        Button historiaUsunRekordPrzycisk = (Button) findViewById(R.id.historiaUsunRekordPrzycisk);
         historiaTekstInfo2 = (TextView) findViewById(R.id.historiaTekstInfo2);
-
-        dodanoNasluchiwaczKlieknieciaRekordu = false;
 
         pobierzDokumentyUztkownika();
 
@@ -90,6 +88,7 @@ public class HistoriaEkran extends Activity {
                 View widok = getCurrentFocus();
                 if (widok != null) {
                     InputMethodManager manadzerWprowadzania = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert manadzerWprowadzania != null;
                     manadzerWprowadzania.hideSoftInputFromWindow(widok.getWindowToken(), 0);
                 }
 
@@ -172,9 +171,6 @@ public class HistoriaEkran extends Activity {
         tabelaHistoria.setVisibility(View.VISIBLE);
         historiaLayoutDolny.setVisibility(View.VISIBLE);
 
-        tabelaHistoria.setColumnCount(naglowkiTabeliHistorii.length);
-        tabelaHistoria.setHeaderBackgroundColor(Color.GRAY);
-
         ArrayList<RekordTabeliHistoria> listaRekordowTabeliHistoria = new ArrayList<RekordTabeliHistoria>();
 
         for (Historia dokumentHistorii : dokumentyHistorii) {
@@ -182,44 +178,49 @@ public class HistoriaEkran extends Activity {
             listaRekordowTabeliHistoria.add(rekordTabeliHistoria);
         }
 
-        rekordyTabeliHistorii = new String[listaRekordowTabeliHistoria.size()][naglowkiTabeliHistorii.length];
-
         for (int i = 0; i < listaRekordowTabeliHistoria.size(); i++) {
             RekordTabeliHistoria rekord = listaRekordowTabeliHistoria.get(i);
 
-            rekordyTabeliHistorii[i][0] = String.valueOf(i + 1);
-            rekordyTabeliHistorii[i][1] = rekord.getStart();
-            rekordyTabeliHistorii[i][2] = rekord.getKoniec();
-            rekordyTabeliHistorii[i][3] = rekord.getData();
-        }
+            // Utworzenie wiersza
+            final TableRow wiersz = new TableRow(this);
+            //wiersz.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
-        tabelaHistoria.setHeaderAdapter(new SimpleTableHeaderAdapter(this, naglowkiTabeliHistorii));
-        tabelaHistoria.setDataAdapter(new SimpleTableDataAdapter(this, rekordyTabeliHistorii));
+            // Inicjalizacja pól w wierszu
+            TextView[] tekst = {new TextView(getApplicationContext()), new TextView(getApplicationContext()), new TextView(getApplicationContext()), new TextView(getApplicationContext())};
+            if(Ustawienia.trybCiemnyAktywny()) tekst = new TextView[]{new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0)};
 
-        if (!dodanoNasluchiwaczKlieknieciaRekordu) {
-            dodajNasluchiwaczKliknieciaRekordu();
-            dodanoNasluchiwaczKlieknieciaRekordu = true;
-        }
-    }
+            // Wypełnienie pól w wierszu
+            tekst[0].setText(String.valueOf(i + 1));
+            tekst[1].setText(rekord.getStart().substring(0, 15)+"…");
+            tekst[2].setText(rekord.getKoniec().substring(0, 15)+"…");
+            tekst[3].setText(rekord.getData().substring(0, 10));
 
-    private void dodajNasluchiwaczKliknieciaRekordu() {
-        tabelaHistoria.addDataClickListener(new TableDataClickListener<String[]>() {
-            @Override
-            public void onDataClicked(int rowIndex, String[] clickedData) {
-                String[] rekord = (String[]) clickedData;
-                RekordTabeliHistoria rekordTabeliHistoria = new RekordTabeliHistoria(rekord[1], rekord[2], rekord[3]);
+            //z jakiegoś powodu bez tych przepisań nie działa
+            int finalneI = i;
+            TextView[] finalnyTekst = tekst;
 
-                Log.i(nazwaApki, "Kliknięty wiesz nr " + rowIndex + ", dane: " + rekordTabeliHistoria.pobierzObiekt());
+            wiersz.setOnClickListener(v -> {
+                Log.i(nazwaApki, "Kliknięty wiesz nr " + finalneI + ", dane: " + finalnyTekst[3].getText());
 
-                Historia dokumentHistorii = dokumentyHistorii.get(rowIndex);
-                final String idDokumentu = idDokumentowHistorii.get(rowIndex);
+                Historia dokumentHistorii = dokumentyHistorii.get(finalneI);
+                final String idDokumentu = idDokumentowHistorii.get(finalneI);
 
                 Log.i(nazwaApki, "Kliknięty dokument historii w bazie (" + idDokumentu + "): " + dokumentHistorii.pobierzObiekt());
 
                 Intent ekranMapaHistoria = new Intent(getApplicationContext(), MapaHistoria.class);
                 ekranMapaHistoria.putExtra("dokument_historii", dokumentHistorii);
                 startActivity(ekranMapaHistoria);
-            }
-        });
+            });
+
+            wiersz.addView(tekst[0]);
+            wiersz.addView(tekst[1]);
+            wiersz.addView(tekst[2]);
+            wiersz.addView(tekst[3]);
+
+            tabelaHistoria.addView(wiersz);
+        }
     }
 }

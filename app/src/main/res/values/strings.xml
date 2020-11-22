@@ -25,4 +25,10 @@
         <item>bar</item>
         <item>psi</item>
     </string-array>
+
+    <string name="historia_header1">LP</string>
+    <string name="historia_header2">START</string>
+    <string name="historia_header3">KONIEC</string>
+    <string name="historia_header4">DATA</string>
+
 </resources>

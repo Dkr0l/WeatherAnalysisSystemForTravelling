@@ -48,13 +48,6 @@ public class MapaHistoria extends Activity {
         kontekst = getApplicationContext();
         mapaHistoriaWidok = (MapView) findViewById(R.id.mapaHistoriaWidok);
 
-        // Kliknięcie w przycisk "COFNIJ"
-        ((Button) findViewById(R.id.mapaHistoriaCofnijPrzycisk)).setOnClickListener(v -> {
-            // Przechodzi do ekranu mapy
-            Intent intent = new Intent(this, HistoriaEkran.class);
-            startActivity(intent);
-        });
-
         Intent ekranMapaHistoria = getIntent();
         dokumentHistorii = (Historia) ekranMapaHistoria.getExtras().getSerializable("dokument_historii");
         Log.i(nazwaApki, "Pobrany dokument historii z aktywności historii: " + dokumentHistorii.pobierzObiekt());

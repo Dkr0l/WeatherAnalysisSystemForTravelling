@@ -161,9 +161,8 @@ public class PobieranieDanychPogody {
 
                     double wartoscWiatru = Double.parseDouble(wiatrWPorywach);
                     if (Ustawienia.jednostkaWiatru().equals("km/h")) wartoscWiatru *= 3.6;
-                    else if (Ustawienia.jednostkaWiatru().equals("mph"))
-                        wartoscWiatru *= 2.23693629;
-                    wiatrWPorywach = "Porywy wiatru: " + wartoscWiatru + Ustawienia.jednostkaWiatru();
+                    else if (Ustawienia.jednostkaWiatru().equals("mph")) wartoscWiatru *= 2.23693629;
+                    wiatrWPorywach = "Porywy wiatru: " + BigDecimal.valueOf(wartoscWiatru).setScale(1, RoundingMode.HALF_UP).doubleValue() + Ustawienia.jednostkaWiatru();
                 }
                 if (Ustawienia.wyswietlicZachmurzenie()) {
                     //pobranie wartości zachmurzenia

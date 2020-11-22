@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/AppTheme.DarkElementTheme"
     tools:context=".ekrany.HistoriaEkran">
 
     <TextView
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="HISTORIA"
+        android:textColor="@color/darkModePrimary"
         android:textAlignment="center"
         android:textSize="32dp" />
 
@@ -32,10 +33,11 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:layout_weight="9999"
-        android:stretchColumns="1, 2, 3">
+        android:stretchColumns="1, 2, 3"
+        android:theme="@style/AppTheme.DarkElementTheme">
 
         <TableRow
-            android:theme="@style/AppTheme.HeaderTheme">
+            android:theme="@style/AppTheme.DarkHeaderTheme">
             <TextView
                 android:text="@string/historia_header1"
                 android:padding="5dp"/>
@@ -65,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/darkModePrimary"
             android:text="Wprowadź numer rekordu:" />
 
         <EditText
@@ -73,8 +76,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:background="@drawable/textfield_frame"
+            android:background="@drawable/textfield_frame_darkmode"
             android:layout_margin="5dp"
+            android:textColor="@color/darkModeText"
             android:inputType="number" />
 
         <Button
@@ -82,6 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/darkModeSecondary"
             android:text="USUŃ REKORD" />
     </LinearLayout>
 

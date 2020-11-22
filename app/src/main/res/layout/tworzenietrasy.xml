@@ -21,6 +21,8 @@
             android:id="@+id/poczatekAuto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/textfield_frame"
+            android:layout_margin="5dp"
             android:layout_weight="1" />
 
         <Button
@@ -49,6 +51,8 @@
             android:id="@+id/koniecAuto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/textfield_frame"
+            android:layout_margin="5dp"
             android:layout_weight="1" />
 
         <Button

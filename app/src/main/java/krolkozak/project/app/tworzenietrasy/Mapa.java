@@ -28,7 +28,8 @@ import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
 
 TODO:
  - dodać wyświetlanie informacji o aktualnej trasie
-
+ - dodać paek ładowania przy oczekiwaniu na trasę
+ - przycisk umożliwiający przejście wprost do ustawień
 */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
