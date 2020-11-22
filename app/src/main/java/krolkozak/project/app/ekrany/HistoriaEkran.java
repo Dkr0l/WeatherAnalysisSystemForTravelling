@@ -80,6 +80,12 @@ public class HistoriaEkran extends Activity {
 
         // PRZYCISK "USUŃ REKORD"
         historiaUsunRekordPrzycisk.setOnClickListener(v -> {
+            if (historiaNumerRekordu.getText().toString().equals("")) {
+                String tekstPrzedialDoWyswietlenia = dokumentyHistorii.size() > 1 ? ("1-" + dokumentyHistorii.size()) : String.valueOf(dokumentyHistorii.size());
+                Toast.makeText(getApplicationContext(), "Wprowadź prawidłowy numer rekordu tabeli (" + tekstPrzedialDoWyswietlenia + ")", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             int indeks = Integer.parseInt(historiaNumerRekordu.getText().toString()) - 1;
 
             if (indeks >= 0 && indeks < dokumentyHistorii.size()) {
@@ -110,6 +116,8 @@ public class HistoriaEkran extends Activity {
 
             dokumentyHistorii.remove(indeks);
             idDokumentowHistorii.remove(indeks);
+
+            tabelaHistoria.removeViews(1, Math.max(0, tabelaHistoria.getChildCount() - 1));
 
             wyswietlDokumenty();
         }).addOnFailureListener(e -> Log.i(nazwaApki, "Błąd usuwania rekordu z bazy danych: " + e.getMessage()));
@@ -187,15 +195,16 @@ public class HistoriaEkran extends Activity {
 
             // Inicjalizacja pól w wierszu
             TextView[] tekst = {new TextView(getApplicationContext()), new TextView(getApplicationContext()), new TextView(getApplicationContext()), new TextView(getApplicationContext())};
-            if(Ustawienia.trybCiemnyAktywny()) tekst = new TextView[]{new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
-                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
-                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
-                    new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0)};
+            if (Ustawienia.trybCiemnyAktywny())
+                tekst = new TextView[]{new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                        new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                        new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0),
+                        new TextView(new ContextThemeWrapper(this, R.style.AppTheme_DarkElementTheme), null, 0)};
 
             // Wypełnienie pól w wierszu
             tekst[0].setText(String.valueOf(i + 1));
-            tekst[1].setText(rekord.getStart().substring(0, 15)+"…");
-            tekst[2].setText(rekord.getKoniec().substring(0, 15)+"…");
+            tekst[1].setText(rekord.getStart().substring(0, 15) + "…");
+            tekst[2].setText(rekord.getKoniec().substring(0, 15) + "…");
             tekst[3].setText(rekord.getData().substring(0, 10));
 
             //z jakiegoś powodu bez tych przepisań nie działa

@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ekrany.MapaHistoria"></activity>
-        <activity android:name=".ekrany.HistoriaEkran" />
+        <activity
+            android:name=".ekrany.HistoriaEkran"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ekrany.Menu" />
         <activity android:name=".ekrany.Logowanie">
             <intent-filter>
