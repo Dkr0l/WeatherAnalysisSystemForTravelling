@@ -1,6 +1,7 @@
 package krolkozak.project.app.tworzenietrasy;
 
 import android.content.Context;
+import android.icu.lang.UCharacter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -31,6 +32,8 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,6 +69,8 @@ public class Trasa {
     private JSONArray miejscaPogodowe = new JSONArray();
     private String lokalizacja_poczatkowa = "";
     private String lokalizacja_koncowa = "";
+    protected static int postep=1;
+    protected static CharSequence opis="";
 
     // metoda czyszcząca mapę (punkty i trasa)
     public void wyczyscMape() {
@@ -161,9 +166,13 @@ public class Trasa {
             }
             url.append("\"").append(koordynaty2).append("\"], options:{routeType:").append(transport_doURL).append(",unit:k}}");
             Log.i(nazwaApki, "mapa url: " + url);
-            // zapisanie wyniku zapytania do ciągu buforu
-            StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url.toString());
 
+            opis="Pobieranie danych trasy";
+            postep=10;
+
+            // zapisanie wyniku zapytania do ciągu buforu
+
+            StringBuffer odpowiedz = InterfejsAPI.pobierzOdpowiedzAPI(url.toString());
             //pobranie trasy z zapytania
             trasaJSON = (JSONObject) (new JSONObject(String.valueOf(odpowiedz))).get("route");
 
@@ -171,7 +180,7 @@ public class Trasa {
             String kodBledu = ((JSONObject) trasaJSON.get("routeError")).getString("errorCode");
             // jeśli kodu błędu jest inny niż (-400) - nie znaleziono trasy -  wyświetl komunikat i przerwij metodę
             if (!kodBledu.equals("-400")) {
-                Toast.makeText(kontekst, "Nie udało się znaleźć trasy!", Toast.LENGTH_LONG).show();
+                Mapa.handler.post(()->Toast.makeText(kontekst, "Nie udało się znaleźć trasy!", Toast.LENGTH_LONG).show());
                 Log.i(nazwaApki, "Kod błędu: " + kodBledu);
                 return;
             }
@@ -204,6 +213,9 @@ public class Trasa {
 
         Log.i(nazwaApki, "Arrival Date: " + czasDotarcia);
 
+        opis="Dodawanie punktów pogodowych początkowego i końcowego";
+        postep=15;
+
         // -------------- DODANIE ZNACZNIKOW NA MAPIE --------------
         try {
             // wywołanie metody, która doda znacznik na mapie z informacją o miejscu, czasu i pogodzie
@@ -215,14 +227,18 @@ public class Trasa {
             e.printStackTrace();
         }
 
+        opis="Dodawanie punktów pogodowych na trasie 0%";
+        postep=20;
+
         // wywołanie metody, która obliczy minimalny odstęp czasu pomiędzy punktami na trasie
         int odstep = pogoda.wyznaczDlugoscOdstepu();
         // wywołanie metody, która doda punkty pośrednie na trasie z obliczonym odstępem
         dodajPunktyPosrednie(trasaJSON, odstep, kontekst);
 
+
         // -------------- KADROWANIE EKRANU --------------
         // skadrowanie widoku mapy na podstawie listy punktów
-        mapa.zoomToBoundingBox(BoundingBox.fromGeoPoints(punkty), true, ROZMIAR_RAMKI);
+        Mapa.handler.post(() -> mapa.zoomToBoundingBox(BoundingBox.fromGeoPoints(punkty), true, ROZMIAR_RAMKI));
 
         // -------------- TWORZENIE TRASY POMIEDZY DWOMA PUNTKAMI NA MAPIE --------------
         // utworzenie zarzadcy trasy z podanym kluczem API
@@ -238,12 +254,14 @@ public class Trasa {
         // utworzenie warstwy trasy i dodanie jej do mapy
         Polyline warstwaTrasy = RoadManager.buildRoadOverlay(trasa);
         mapa.getOverlays().add(warstwaTrasy);
+        postep=100;
     }
 
     // -------------- DODANIE PUNKTÓW POGODY NA TRASIE Z ODSTĘPEM CZASU --------------
     @RequiresApi(api = Build.VERSION_CODES.O)
     // metoda, która doda punkty pośrednie na trasie z obliczonym odstępem
     public void dodajPunktyPosrednie(JSONObject trasa, int odstep, Context kontekst) throws JSONException {
+        postep=20;
         // -------------- PRZEJŚCIE PO CAŁEJ TRASIE I DODANIE PUNKTÓW POGODOWYCH Z OBLICZONYM ODSTĘPEM --------------
         try {
             int sumaCzasu = 0;
@@ -255,6 +273,10 @@ public class Trasa {
             JSONObject koordynatyPoprzednieJSON = new JSONObject();
             punkty.add(new GeoPoint(szerGeog1, dlugGeog1));
             for (int numOdcinka = 0; numOdcinka < obiektLegsJSON.length(); numOdcinka++) {
+                if(obiektLegsJSON.length()>1) {
+                    opis="Dodawanie punktów pogodowych na trasie " + (int) (80*numOdcinka / obiektLegsJSON.length()) + "%";
+                    postep=(int) (20+80*numOdcinka / obiektLegsJSON.length());
+                }
                 PunktPostoju obecnyPrzystanek;
                 if (numOdcinka < przystanki.size()) {
                     obecnyPrzystanek = przystanki.get(numOdcinka);
@@ -264,6 +286,10 @@ public class Trasa {
                 int dodanePunkty = 0;
                 // pętla przechodząca po wszystkich punktach manewrowych trasy, dodająca czas pomiędzy nimi do sumy
                 for (int i = 0; i < manewryJSON.length(); i++) {
+                    if(obiektLegsJSON.length()==1) {
+                        opis="Dodawanie punktów pogodowych na trasie " + (int) (80*i / manewryJSON.length()) + "%";
+                        postep=(int) (20+80*i / manewryJSON.length());
+                    }
                     manewr = (JSONObject) manewryJSON.get(i);
 
                     // jesli sumowany czas przekroczy obliczony odstęp - zostanie dodany punkt pogodowy na trasie w danym punkcie

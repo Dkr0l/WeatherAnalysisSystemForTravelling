@@ -3,14 +3,12 @@ package krolkozak.project.app.tworzenietrasy;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -18,8 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-
-import org.json.JSONException;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -34,7 +30,6 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
-import static krolkozak.project.app.tworzenietrasy.Mapa.kontekst;
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
 public class TworzenieTrasy extends Activity {
@@ -111,6 +106,15 @@ public class TworzenieTrasy extends Activity {
             String srodekTransportu=(String)lista_transport.getSelectedItem();
             int wybranyTransport=lista_transport.getSelectedItemPosition();
             if(odlegloscKM(poczAuto.pomocDlugGeog, poczAuto.pomocSzerGeog, koniecAuto.pomocDlugGeog, koniecAuto.pomocSzerGeog)<200 ||(wybranyTransport!=2 && wybranyTransport!=3)) {
+                // przypisz pobrane szerkości i długości geograficzne z pierwszego i drugiego pola wyboru trasy
+                // do zmiennych, które zostaną użyte przy tworzeniu trasy na mapie
+                Mapa.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
+                Mapa.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
+                Mapa.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
+                Mapa.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
+
+                Mapa.znajdzTrasePrzycisk.setEnabled(true);
+
                 Intent intent = new Intent();
                 intent.putExtra("stworzono trase", srodekTransportu);
                 setResult(Activity.RESULT_OK, intent);
@@ -118,24 +122,6 @@ public class TworzenieTrasy extends Activity {
             }else{
                 Toast.makeText(getApplicationContext(), "Trasa za długa na wybrany środek transportu!", Toast.LENGTH_LONG).show();
             }
-        });
-
-        // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
-        Mapa.znajdzTrasePrzycisk.setOnClickListener(v -> {
-            // przypisz pobrane szerkości i długości geograficzne z pierwszego i drugiego pola wyboru trasy
-            // do zmiennych, które zostaną użyte przy tworzeniu trasy na mapie
-            Mapa.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
-            Mapa.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
-            Mapa.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
-            Mapa.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
-
-            // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
-            try {
-                Mapa.trasa.odswiezMape(Mapa.kontekst);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Mapa.trasa.przystanki.clear();
         });
     }
 

@@ -17,6 +17,11 @@
         android:layout_height="wrap_content"
         android:text="ZNAJDŹ TRASĘ" />
 
+    <include
+        android:id="@+id/popupPostep"
+        android:visibility="gone"
+        layout="@layout/popup_pasekpostepu"/>
+
     <org.osmdroid.views.MapView
         android:id="@+id/mapaWidok"
         android:layout_width="fill_parent"

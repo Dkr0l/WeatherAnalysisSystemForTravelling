@@ -7,15 +7,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONException;
 import org.osmdroid.config.Configuration;
 
 import java.util.ArrayList;
@@ -28,7 +33,7 @@ import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
 
 TODO:
  - dodać wyświetlanie informacji o aktualnej trasie
- - dodać paek ładowania przy oczekiwaniu na trasę
+ - dodać pasek ładowania przy oczekiwaniu na trasę
  - przycisk umożliwiający przejście wprost do ustawień
 */
 
@@ -48,6 +53,27 @@ public class Mapa extends Activity {
     public static Trasa trasa = new Trasa();
     //kontekst aplikacji
     protected static Context kontekst;
+    //do paska postepu
+    private static ProgressBar pasekPostepu;
+    public static void ustawPostep(int postep0do100) {
+        pasekPostepu.setProgress(postep0do100);
+    }
+    private static TextView opisPostepu;
+    public static void ustawPodpisPostepu(CharSequence opis) {
+        opisPostepu.setText(opis);
+    }
+    public static Handler handler=new Handler();
+    private boolean wygenerowane=false;
+    public void opoznioneOdswierzanie(final int czas_ms)
+    {
+        handler.postDelayed(() -> {
+            if (!wygenerowane) {
+                handler.post(() -> ustawPodpisPostepu(Trasa.opis));
+                handler.post(() -> ustawPostep(Trasa.postep));
+                opoznioneOdswierzanie(czas_ms);
+            }
+        }, czas_ms);
+    }
 
     // -------------- GŁÓWNA METODA APLIKACJI WYWOŁYWANA PO URUCHOMIENIU --------------
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -83,8 +109,13 @@ public class Mapa extends Activity {
         // przycisków
         znajdzTrasePrzycisk = findViewById(R.id.znajdzTrasePrzycisk);
 
+        //elementy paska ladowania
+        pasekPostepu = findViewById(R.id.pasekPostepu);
+        opisPostepu = findViewById(R.id.postepInfo);
+
         // przypisanie okna tworzenia trasy do przycisku
         ((Button) findViewById(R.id.stworzTrasePrzycisk)).setOnClickListener(v -> {
+            trasa.przystanki.clear();
             Intent popupIntent = new Intent(this, TworzenieTrasy.class);
             startActivityForResult(popupIntent, DANE_TRASY);
         });
@@ -95,10 +126,40 @@ public class Mapa extends Activity {
             WyswietlanieMapy.wlaczCiemnyTrybMapy(trasa.mapa);
         }
 
+        // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
+        znajdzTrasePrzycisk.setOnClickListener(v -> {
+            Trasa.postep=0;
+            findViewById(R.id.mapaWidok).setVisibility(View.GONE);
+            findViewById(R.id.popupPostep).setVisibility(View.VISIBLE);
+            findViewById(R.id.widokmapy).invalidate();
+            //wymuszenie odświerzenia widoku przed wykonaniem dalszego kodu
+            findViewById(R.id.widokmapy).post(() -> {
+                new Thread(new Zadanie()).start();
+                opoznioneOdswierzanie(200);
+            });
+        });
+
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
         znajdzTrasePrzycisk.setEnabled(false);
+    }
+
+    class Zadanie implements Runnable{
+        @Override
+        public void run(){
+            handler.post(() -> Mapa.ustawPodpisPostepu("Rozpoczynanie obliczeń"));
+            // wywołanie metody, która obliczy i wyświetli trasę wraz z punktami pogodowymi na mapie
+            try {
+                trasa.odswiezMape(getApplicationContext());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            wygenerowane=true;
+            handler.post(() -> findViewById(R.id.popupPostep).setVisibility(View.GONE));
+            handler.post(() -> findViewById(R.id.mapaWidok).setVisibility(View.VISIBLE));
+            handler.post(() -> findViewById(R.id.widokmapy).invalidate());
+        }
     }
 
     // metoda prosząca użytkownika o zezwolenia na uprawnienia
