@@ -136,7 +136,7 @@ public class Autouzupelnianie {
             }
         });
 
-        // dodanie nasłuchiwacza kliknięcia w podpowiedź w pierwszym polu tekstowym
+        // dodanie nasłuchiwacza kliknięcia w podpowiedź w polu tekstowym
         poleAutouzupelnianie.setOnItemClickListener((parent, arg1, pos, id) -> {
             JSONObject podpowiedziJSON;
 
@@ -234,6 +234,11 @@ public class Autouzupelnianie {
                         pobranoZgps = true;
                         // wyświetlenie adresu urządzenia w pierwszym polu tekstowym (początek trasy)
                         TworzenieTrasy.poczatekAutouzupelnianie.setText(nazwaLokacji, false);
+
+                        //wstawienie nazwy miejsca do opisu trasy
+                        nazwaMiejsca = adres.getLocality();
+                        TworzenieTrasy.aktualnaTrasaTekst.setPoczątekTrasyTekst(nazwaMiejsca);
+                        TworzenieTrasy.zaktualiujTwojaTrasaTekst();
                     } catch (IOException e) {
                         // jeśli się nie udało pobrać adresu - aplikacja wyrzuci wyjątek
                         Log.i(nazwaApki, "Location Error: " + e.getMessage());

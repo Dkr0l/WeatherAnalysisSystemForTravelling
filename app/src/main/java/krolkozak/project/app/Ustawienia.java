@@ -231,7 +231,8 @@ public class Ustawienia extends Activity {
         przelacznikZachmurzenie.setChecked(zachmurzenie);
     }
 
-    public static void wczytajZPamieci(Map<String, ?> ustawienia) {
+    // zapisanie ustawień użytkownika w zmiennych tymczasowych
+    public static void wczytajZPamieci(Map<String, ?> ustawienia) throws NullPointerException {
         trybCiemnyAktywny = ((Map<String, Boolean>) ustawienia).getOrDefault("trybCiemny", false);
         jednostkiWiatr = ((Map<String, String>) ustawienia).getOrDefault("jednostkiWiatr", "km/h");
         jednostkiOpady = ((Map<String, String>) ustawienia).getOrDefault("jednostkiOpady", "mm/h");
