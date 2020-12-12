@@ -17,6 +17,10 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -26,11 +30,12 @@ import krolkozak.project.app.pomocnicze.AktualnaTrasaTekst;
 import krolkozak.project.app.tworzenietrasy.popup.PopupCzas;
 import krolkozak.project.app.tworzenietrasy.popup.PopupPrzystanek;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
+import static krolkozak.project.app.tworzenietrasy.Mapa.trasa;
 
 public class TworzenieTrasy extends Activity {
     // pola tekstowe z autouzupełnianiem
@@ -108,10 +113,10 @@ public class TworzenieTrasy extends Activity {
             if(odlegloscKM(poczAuto.pomocDlugGeog, poczAuto.pomocSzerGeog, koniecAuto.pomocDlugGeog, koniecAuto.pomocSzerGeog)<200 ||(wybranyTransport!=2 && wybranyTransport!=3)) {
                 // przypisz pobrane szerkości i długości geograficzne z pierwszego i drugiego pola wyboru trasy
                 // do zmiennych, które zostaną użyte przy tworzeniu trasy na mapie
-                Mapa.trasa.szerGeog1 = poczAuto.pomocSzerGeog;
-                Mapa.trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
-                Mapa.trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
-                Mapa.trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
+                trasa.szerGeog1 = poczAuto.pomocSzerGeog;
+                trasa.dlugGeog1 = poczAuto.pomocDlugGeog;
+                trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
+                trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
 
                 Mapa.znajdzTrasePrzycisk.setEnabled(true);
 
@@ -123,6 +128,60 @@ public class TworzenieTrasy extends Activity {
                 Toast.makeText(getApplicationContext(), "Trasa za długa na wybrany środek transportu!", Toast.LENGTH_LONG).show();
             }
         });
+
+        Intent ekranTworzenieTrasy = getIntent();
+        String punktyTrasy = ekranTworzenieTrasy.getStringExtra("punkty_trasy");
+        if(punktyTrasy != null) {
+            Log.i(nazwaApki, "Punkty trasy do odtworzenia z historii (ekran tworzenia trasy): " + punktyTrasy);
+
+            trasa.przystanki.clear();
+
+            try {
+                JSONArray punktyTrasyJSON = new JSONArray(punktyTrasy);
+                String przystankiTekst = "";
+
+                for (int i = 0; i < punktyTrasyJSON.length(); i++) {
+                    JSONObject punktyTrasyJSONObject = (JSONObject) punktyTrasyJSON.getJSONObject(i);
+
+                    String nazwa = punktyTrasyJSONObject.getString("nazwa");
+                    double szerGeog = punktyTrasyJSONObject.getDouble("szer_geog");
+                    double dlugGeog = punktyTrasyJSONObject.getDouble("dlug_geog");
+                    String indeks = punktyTrasyJSONObject.getString("indeks");
+                    int czasPostojuMinuty = punktyTrasyJSONObject.getInt("czas_postoju");
+
+                    if(indeks.equals("POCZATEK")) {
+                        poczatekAutouzupelnianie.setText(nazwa);
+                        aktualnaTrasaTekst.setPoczątekTrasyTekst(nazwa);
+
+                        poczAuto.pomocSzerGeog = szerGeog;
+                        poczAuto.pomocDlugGeog = dlugGeog;
+                    } else if(indeks.equals("KONIEC")) {
+                        koniecAutouzupelnianie.setText(nazwa);
+                        aktualnaTrasaTekst.setKoniecTrasyTekst(nazwa);
+
+                        koniecAuto.pomocSzerGeog = szerGeog;
+                        koniecAuto.pomocDlugGeog = dlugGeog;
+                    } else if(indeks.equals("PRZYSTANEK")) {
+                        PunktPostoju punktPostoju = new PunktPostoju(szerGeog, dlugGeog, nazwa, czasPostojuMinuty);
+                        trasa.przystanki.add(punktPostoju);
+
+                        String nowyPrzystanekTekst = nazwa + " (" + czasPostojuMinuty + "min)";
+                        przystankiTekst = przystankiTekst.equals("") ? nowyPrzystanekTekst : przystankiTekst + ", " + nowyPrzystanekTekst;
+                    }
+                }
+
+                aktualnaTrasaTekst.setPrzystankiTekst(przystankiTekst);
+                zaktualiujTwojaTrasaTekst();
+
+                TworzenieTrasy.zatwierdzTrasePrzycisk.setText("ZATWIERDŹ TRASĘ");
+                TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(true);
+
+                Mapa.znajdzTrasePrzycisk.setText("ZNAJDŹ TRASĘ");
+                Mapa.znajdzTrasePrzycisk.setEnabled(true);
+            } catch (JSONException e) {
+                Log.i(nazwaApki, "Nie udało się pobrać punktów trasy do odtworzenia z historii: " + e.getMessage());
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -132,10 +191,10 @@ public class TworzenieTrasy extends Activity {
             case DATA_WYJAZDU:
                 if (resultCode == Activity.RESULT_OK) {
                     if (PopupCzas.dataWybrana) {
-                        Mapa.trasa.czasWyjazdu = (OffsetDateTime) Objects.requireNonNull(data.getExtras()).getSerializable("czasWyjazdu");
-                        Log.i(nazwaApki, "Ustawiono czas wyjazdu: " + Mapa.trasa.czasWyjazdu);
+                        trasa.czasWyjazdu = (OffsetDateTime) Objects.requireNonNull(data.getExtras()).getSerializable("czasWyjazdu");
+                        Log.i(nazwaApki, "Ustawiono czas wyjazdu: " + trasa.czasWyjazdu);
                     } else {
-                        Mapa.trasa.czasWyjazdu = OffsetDateTime.now();
+                        trasa.czasWyjazdu = OffsetDateTime.now();
                     }
                 }
         }

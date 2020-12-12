@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import krolkozak.project.app.R;
 import krolkozak.project.app.bazadanych.Historia;
 import krolkozak.project.app.pomocnicze.WyswietlanieMapy;
+import krolkozak.project.app.tworzenietrasy.Mapa;
 
 import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 
@@ -77,6 +78,13 @@ public class MapaHistoria extends Activity {
         } catch (JSONException e) {
             Log.i(nazwaApki, "Nie udało się wyświetlić trasy na mapie: " + e.getMessage());
         }
+
+        // PRZYCISK "ODTWÓRZ TRASĘ"
+        ((Button) findViewById(R.id.mapaHistoriaOdtworz)).setOnClickListener(v -> {
+            Intent ekranMapa = new Intent(getApplicationContext(), Mapa.class);
+            ekranMapa.putExtra("punkty_trasy", dokumentHistorii.getPunkty_trasy());
+            startActivity(ekranMapa);
+        });
     }
 
     private void wyswietlPunktyPogodowe() throws JSONException {

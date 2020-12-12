@@ -1,7 +1,6 @@
 package krolkozak.project.app.tworzenietrasy;
 
 import android.content.Context;
-import android.icu.lang.UCharacter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -32,8 +31,6 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -322,13 +319,32 @@ public class Trasa {
             punkty.add(new GeoPoint(szerGeog2, dlugGeog2));
 
             JSONArray punktyTrasy = new JSONArray();
-            for (GeoPoint punkt : punkty) {
-                JSONObject koordynaty = new JSONObject();
-                koordynaty.put("szer_geog", punkt.getLatitude());
-                koordynaty.put("dlug_geog", punkt.getLongitude());
 
-                punktyTrasy.put(koordynaty);
+            JSONObject punkt_pocz = new JSONObject();
+            punkt_pocz.put("nazwa", lokalizacja_poczatkowa);
+            punkt_pocz.put("szer_geog", punkty.get(0).getLatitude());
+            punkt_pocz.put("dlug_geog", punkty.get(0).getLongitude());
+            punkt_pocz.put("indeks", "POCZATEK");
+            punkt_pocz.put("czas_postoju", 0);
+            punktyTrasy.put(punkt_pocz);
+
+            for (PunktPostoju przystanek : przystanki) {
+                JSONObject punkt = new JSONObject();
+                punkt.put("nazwa", przystanek.getNazwa());
+                punkt.put("szer_geog", przystanek.getSzerGeog());
+                punkt.put("dlug_geog", przystanek.getDlugGeog());
+                punkt.put("indeks", "PRZYSTANEK");
+                punkt.put("czas_postoju", przystanek.getCzasPostojuMinuty());
+                punktyTrasy.put(punkt);
             }
+
+            JSONObject punkt_konc = new JSONObject();
+            punkt_konc.put("nazwa", lokalizacja_koncowa);
+            punkt_konc.put("szer_geog", punkty.get(punkty.size() - 1).getLatitude());
+            punkt_konc.put("dlug_geog", punkty.get(punkty.size() - 1).getLongitude());
+            punkt_konc.put("indeks", "KONIEC");
+            punkt_konc.put("czas_postoju", 0);
+            punktyTrasy.put(punkt_konc);
 
             Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString(), transport_doURL, punktyTrasy.toString());
             Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());

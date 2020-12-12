@@ -88,6 +88,18 @@ public class Mapa extends Activity {
             setContentView(R.layout.mapa);
         }
 
+        Intent ekranMapa = getIntent();
+        String punktyTrasy = ekranMapa.getStringExtra("punkty_trasy");
+        if(punktyTrasy != null) {
+            Log.i(nazwaApki, "Punkty trasy do odtworzenia z historii (ekrany mapy): " + punktyTrasy);
+
+            trasa.przystanki.clear();
+
+            Intent ekranTworzenieTrasy = new Intent(getApplicationContext(), TworzenieTrasy.class);
+            ekranTworzenieTrasy.putExtra("punkty_trasy", punktyTrasy);
+            startActivityForResult(ekranTworzenieTrasy, DANE_TRASY);
+        }
+
         // -------------- POLITYKA I UPRAWNIENIA --------------
         // zezwolenie na wszystkie potrzebne uprawnienia
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
