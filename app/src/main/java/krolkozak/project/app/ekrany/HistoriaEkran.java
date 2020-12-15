@@ -37,7 +37,6 @@ import static krolkozak.project.app.tworzenietrasy.Mapa.nazwaApki;
 /*
 
 TODO:
- - dodać przycisk do wprowadzenia danych wybranej trasy z historii do widoku tworzenia trasy
  - podzielić historie na strony (jakby któryś użytkownik nabił 3k rekordów w historii :D )
 
 */

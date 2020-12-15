@@ -74,6 +74,6 @@ public class PopupCzas extends Activity {
         //przeliczenie na milisekundy
         long milisekundyEpoch=teraz.toEpochDay()*milisekundWDniu;
         kalendarz.setMinDate(milisekundyEpoch);
-        kalendarz.setMaxDate(milisekundyEpoch+milisekundWDniu*13);
+        kalendarz.setMaxDate(milisekundyEpoch+milisekundWDniu*14);
     }
 }
