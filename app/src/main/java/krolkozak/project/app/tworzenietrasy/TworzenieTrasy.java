@@ -45,6 +45,7 @@ public class TworzenieTrasy extends Activity {
     protected static Button wyczyscPoczatekPrzycisk;
     protected static Button wyczyscKoniecPrzycisk;
     protected static Button zatwierdzTrasePrzycisk;
+    private static Button wyczyscTrasePrzycisk;
     // komunikacja między aktywnościami
     private static final int DATA_WYJAZDU = 101;
     // klawiatura
@@ -72,11 +73,13 @@ public class TworzenieTrasy extends Activity {
         // pól tekstowych z automatycznymi podpowiedziami do zmiennych klasy
         poczatekAutouzupelnianie = findViewById(R.id.poczatekAuto);
         koniecAutouzupelnianie = findViewById(R.id.koniecAuto);
+        if(aktualnaTrasaTekst==null)aktualnaTrasaTekst = new AktualnaTrasaTekst();
 
         // przycisków
         wyczyscPoczatekPrzycisk = findViewById(R.id.wyczyscPoczatekPrzycisk);
         wyczyscKoniecPrzycisk = findViewById(R.id.wyczyscKoniecPrzycisk);
         zatwierdzTrasePrzycisk = findViewById(R.id.zatwierdzTrasePrzycisk);
+        wyczyscTrasePrzycisk = findViewById(R.id.wyczyscTrasePrzycisk);
 
         // klawiatury i lokalizacji
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -85,7 +88,6 @@ public class TworzenieTrasy extends Activity {
         // przypisanie widoku wyświetlającego tekst aktualnych danych trasy do zmiennej i dodanie paska przewijania
         twojaTrasaTekst = findViewById(R.id.twojaTrasaTekst);
         twojaTrasaTekst.setMovementMethod(new ScrollingMovementMethod());
-        aktualnaTrasaTekst = new AktualnaTrasaTekst();
 
         // utworzenie obkietu klasy Autouzupelnianie
         //autouzupelnianie = new Autouzupelnianie();
@@ -107,6 +109,18 @@ public class TworzenieTrasy extends Activity {
         // ustawienie pozycji na liście wyboru środka transportu
         Spinner lista_transport = findViewById(R.id.wybor_srodka_transportu);
 
+        //Utworzenie nowej, pustej trasy
+        wyczyscTrasePrzycisk.setOnClickListener(v -> {
+            trasa.przystanki.clear();
+            aktualnaTrasaTekst = new AktualnaTrasaTekst();
+            zaktualiujTwojaTrasaTekst();
+            poczatekAutouzupelnianie.setText("");
+            koniecAutouzupelnianie.setText("");
+            lista_transport.setSelection(0);
+            zatwierdzTrasePrzycisk.setText("WYBIERZ PUNKTY");
+            zatwierdzTrasePrzycisk.setEnabled(false);
+        });
+
         zatwierdzTrasePrzycisk.setOnClickListener(v -> {
             String srodekTransportu=(String)lista_transport.getSelectedItem();
             int wybranyTransport=lista_transport.getSelectedItemPosition();
@@ -118,7 +132,7 @@ public class TworzenieTrasy extends Activity {
                 trasa.szerGeog2 = koniecAuto.pomocSzerGeog;
                 trasa.dlugGeog2 = koniecAuto.pomocDlugGeog;
 
-                Mapa.znajdzTrasePrzycisk.setEnabled(true);
+                Mapa.wyswietlTrasePrzycisk.setEnabled(true);
 
                 Intent intent = new Intent();
                 intent.putExtra("stworzono trase", srodekTransportu);
@@ -129,6 +143,7 @@ public class TworzenieTrasy extends Activity {
             }
         });
 
+        //odtwarzanie trasy z historii
         Intent ekranTworzenieTrasy = getIntent();
         String punktyTrasy = ekranTworzenieTrasy.getStringExtra("punkty_trasy");
         if(punktyTrasy != null) {
@@ -176,8 +191,7 @@ public class TworzenieTrasy extends Activity {
                 TworzenieTrasy.zatwierdzTrasePrzycisk.setText("ZATWIERDŹ TRASĘ");
                 TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(true);
 
-                Mapa.znajdzTrasePrzycisk.setText("ZNAJDŹ TRASĘ");
-                Mapa.znajdzTrasePrzycisk.setEnabled(true);
+                Mapa.wyswietlTrasePrzycisk.setEnabled(true);
             } catch (JSONException e) {
                 Log.i(nazwaApki, "Nie udało się pobrać punktów trasy do odtworzenia z historii: " + e.getMessage());
             }
@@ -209,4 +223,5 @@ public class TworzenieTrasy extends Activity {
         double kmSzerokosc=40.075*cos(abs(szerokosc1-szerokosc2))/360;
         return sqrt(pow(kmDlugosc, 2) + pow(kmSzerokosc, 2));
     }
+
 }

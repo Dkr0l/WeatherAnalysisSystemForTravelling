@@ -94,8 +94,8 @@ public class Trasa {
         wyczyscMape();
 
         // Punkty wokół których zostanie wykadrowana mapa na start aplikacji
-        punkty.add(new GeoPoint(40.730610, -73.935242)); // NOWY JORK
-        punkty.add(new GeoPoint(41.015137, 28.979530)); // STAMBUŁ
+        punkty.add(new GeoPoint(51.49, -0.14)); // LONDYN
+        punkty.add(new GeoPoint(41.01, 28.97)); // STAMBUŁ
 
         // -------------- DOSTOSOWANIE PRZYBLIZENIA --------------
         // ustawienie minimalnego i maksymalnego możliwego przybliżenia
@@ -345,6 +345,8 @@ public class Trasa {
             punkt_konc.put("indeks", "KONIEC");
             punkt_konc.put("czas_postoju", 0);
             punktyTrasy.put(punkt_konc);
+
+            Mapa.obecnePunktyTrasy=punktyTrasy;
 
             Historia historia = new Historia(FirebaseAuth.getInstance().getCurrentUser().getUid(), lokalizacja_poczatkowa, lokalizacja_koncowa, czasWyjazdu.toString(), miejscaPogodowe.toString(), transport_doURL, punktyTrasy.toString());
             Log.i(nazwaApki, "Historia: " + historia.pobierzObiekt());

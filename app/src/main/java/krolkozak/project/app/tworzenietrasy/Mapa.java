@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.osmdroid.config.Configuration;
 
@@ -44,7 +45,7 @@ public class Mapa extends Activity {
     // pomocnicza nazwa aplikacji do debuggowania
     public static final String nazwaApki = "TRAVEL_APP";
     // przyciski
-    public static Button znajdzTrasePrzycisk;
+    public static Button wyswietlTrasePrzycisk;
     // komunikacja między aktywnościami
     private static final int DANE_TRASY = 102;
     // obiekt klasy Trasa
@@ -62,6 +63,7 @@ public class Mapa extends Activity {
     }
     public static Handler handler=new Handler();
     private boolean wygenerowane=false;
+    protected static JSONArray obecnePunktyTrasy;
     public void opoznioneOdswierzanie(final int czas_ms)
     {
         handler.postDelayed(() -> {
@@ -117,7 +119,7 @@ public class Mapa extends Activity {
         trasa.mapa = findViewById(R.id.mapaWidok);
 
         // przycisków
-        znajdzTrasePrzycisk = findViewById(R.id.znajdzTrasePrzycisk);
+        wyswietlTrasePrzycisk = findViewById(R.id.wyswietlTrasePrzycisk);
 
         //elementy paska ladowania
         pasekPostepu = findViewById(R.id.pasekPostepu);
@@ -125,8 +127,8 @@ public class Mapa extends Activity {
 
         // przypisanie okna tworzenia trasy do przycisku
         ((Button) findViewById(R.id.stworzTrasePrzycisk)).setOnClickListener(v -> {
-            trasa.przystanki.clear();
-            Intent popupIntent = new Intent(this, TworzenieTrasy.class);
+            Intent popupIntent = new Intent(getApplicationContext(), TworzenieTrasy.class);
+            if(obecnePunktyTrasy!=null) popupIntent.putExtra("punkty_trasy", obecnePunktyTrasy.toString());
             startActivityForResult(popupIntent, DANE_TRASY);
         });
 
@@ -137,13 +139,14 @@ public class Mapa extends Activity {
         }
 
         // dodanie nasłuchiwacza kliknięcia w przycisk "ZNAJDŹ TRASĘ"
-        znajdzTrasePrzycisk.setOnClickListener(v -> {
+        wyswietlTrasePrzycisk.setOnClickListener(v -> {
             Trasa.postep=0;
             findViewById(R.id.mapaWidok).setVisibility(View.GONE);
             findViewById(R.id.popupPostep).setVisibility(View.VISIBLE);
             findViewById(R.id.widokmapy).invalidate();
             //wymuszenie odświerzenia widoku przed wykonaniem dalszego kodu
             findViewById(R.id.widokmapy).post(() -> {
+                ustawPostep(Trasa.postep);
                 new Thread(new Zadanie()).start();
                 opoznioneOdswierzanie(200);
             });
@@ -152,7 +155,7 @@ public class Mapa extends Activity {
         // wyłączenie przycisków
         Log.i(nazwaApki, "WYŁĄCZONO PRZYCISK");
 
-        znajdzTrasePrzycisk.setEnabled(false);
+        wyswietlTrasePrzycisk.setEnabled(false);
     }
 
     class Zadanie implements Runnable{

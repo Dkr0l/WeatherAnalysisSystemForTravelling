@@ -191,8 +191,7 @@ public class Autouzupelnianie {
         TworzenieTrasy.zatwierdzTrasePrzycisk.setText("WYBIERZ PUNKTY");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(false);
 
-        Mapa.znajdzTrasePrzycisk.setText("STWÓRZ TRASĘ");
-        Mapa.znajdzTrasePrzycisk.setEnabled(false);
+        Mapa.wyswietlTrasePrzycisk.setEnabled(false);
     }
 
     // -------------- WŁĄCZENIE PRZYCISKU WYSZUKANIA TRASY --------------
@@ -203,8 +202,7 @@ public class Autouzupelnianie {
         Log.i(nazwaApki, "WŁĄCZONO PRZYCISK");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setText("ZATWIERDŹ TRASĘ");
         TworzenieTrasy.zatwierdzTrasePrzycisk.setEnabled(true);
-        Mapa.znajdzTrasePrzycisk.setText("ZNAJDŹ TRASĘ");
-        Mapa.znajdzTrasePrzycisk.setEnabled(true);
+        Mapa.wyswietlTrasePrzycisk.setEnabled(true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
