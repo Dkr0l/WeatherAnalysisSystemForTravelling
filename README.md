@@ -25,5 +25,5 @@ cannot be avoided.
 
 ## How to run
 You can download ready apk file directly from the github repository (WeatherAnalysisSystemForTravelling.apk) or, alternatively you can build the apk file youself.
-The project was created using Android Studio 4.0.1 with JDK wersion 1.8.0_242. With this configuration on your workstation you should have no issuses running the project. For running the application with all features active, Android 10 "Q" is recommended as it features Android API 29. Building the apk can be achieved by selecting the option presented below.
+The project was created using Android Studio 4.0.1 with JDK wersion 1.8.0_242. With this configuration on your workstation you should have no issuses running the project. For running the application with all features active, Android 10 "Q" is recommended as it features Android API 29. Building the apk can be achieved by selecting the option presented below. **Mind this project was developed as an engineering thesis in 2020 and the third party services it utilizes might have stopped working since.**
   ![androidStudio](https://user-images.githubusercontent.com/46425990/120782069-ed453980-c529-11eb-8273-a047173c0a44.png)
