@@ -1,10 +1,9 @@
 ## About
 ![banner](https://user-images.githubusercontent.com/46425990/120780615-9428d600-c528-11eb-8a51-90dccb8ae615.png)
-Above is the Android Studio project for an Android app created by myself in collaboration with Mateusz Kozak ( https://github.com/MatiMatik97 ) as a Bachelor's Thesis in Computer Engineering.
+Above is the Android Studio project for an Android app created by myself in collaboration with [Mateusz Kozak](https://github.com/MatiMatik97 "github profile") as a Bachelor's Thesis in Computer Engineering.
 
-The full thesis can be found at my Linkedin page linked below (mind it was written in Polish with exclusion of abstract that is available in english). The linked document contains the full documentation along with screenshots of the application and user manual.
+The full thesis can be found [at my Linkedin page](https://www.linkedin.com/in/dkr0l/detail/treasury/education:703888601/?entityUrn=urn%3Ali%3Afsd_profileTreasuryMedia%3A(ACoAADRISuUBz2ldKuCu4n8QlXbAV7OmfQpdHUg%2C1613649439200)&section=education%3A703888601&treasuryCount=1 "full thesis at my LinkedIn profile") (mind it was written in Polish with exclusion of abstract that is available in english). The linked document contains the full documentation along with screenshots of the application and user manual.
 
-https://www.linkedin.com/in/dkr0l/detail/treasury/education:703888601/?entityUrn=urn%3Ali%3Afsd_profileTreasuryMedia%3A(ACoAADRISuUBz2ldKuCu4n8QlXbAV7OmfQpdHUg%2C1613649439200)&section=education%3A703888601&treasuryCount=1
 
 ## Abstract (part of the linked paper)
 
